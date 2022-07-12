@@ -9,7 +9,7 @@ Window {
     title: "QtNotes"
 
     ColumnLayout {
-        id: column
+        id: columnLayout
         anchors.fill: parent
         anchors.rightMargin: 20
         anchors.leftMargin: 20
@@ -18,7 +18,7 @@ Window {
         spacing: 6
 
         Text {
-            id: text1
+            id: title
             text: qsTr("QtNotes")
             font.pixelSize: 22
             wrapMode: Text.WrapAnywhere
@@ -27,7 +27,7 @@ Window {
         }
 
         Text {
-            id: text2
+            id: description
             text: qsTr("A cross platform note taking application that does not rely on web technologies")
             font.pixelSize: 14
             wrapMode: Text.WordWrap
@@ -36,7 +36,7 @@ Window {
         }
 
         TextEdit {
-            id: textEdit
+            id: noteEdit
             width: 80
             height: 20
             text: qsTr("Your note")
@@ -48,7 +48,7 @@ Window {
         }
 
         Button {
-            id: button
+            id: createNoteButton
             text: qsTr("Create note")
             padding: 8
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
