@@ -21,6 +21,7 @@ Window {
             id: text1
             text: qsTr("QtNotes")
             font.pixelSize: 22
+            wrapMode: Text.WrapAnywhere
             renderType: Text.NativeRendering
             Layout.fillWidth: true
         }
@@ -29,6 +30,7 @@ Window {
             id: text2
             text: qsTr("A cross platform note taking application that does not rely on web technologies")
             font.pixelSize: 14
+            wrapMode: Text.WordWrap
             renderType: Text.NativeRendering
             Layout.fillWidth: true
         }
