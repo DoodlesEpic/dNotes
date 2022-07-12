@@ -52,6 +52,11 @@ Window {
             text: qsTr("Create note")
             padding: 8
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+
+            Connections {
+                target: createNoteButton
+                function onClicked() { console.log("Create note clicked") }
+            }
         }
     }
 }
