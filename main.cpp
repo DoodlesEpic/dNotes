@@ -4,8 +4,12 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
+    QApplication app(argc, argv);
+    QCoreApplication::setOrganizationName("DoodlesEpic");
+    QCoreApplication::setApplicationName("QtNotes");
+    QCoreApplication::setApplicationVersion(QT_VERSION_STR);
+
+    MainWindow mainWin;
+    mainWin.show();
+    return app.exec();
 }
