@@ -23,7 +23,7 @@ void MainWindow::on_createNoteButton_clicked()
 
     QFile file("note.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qWarning() << "Text: " << noteText;
+        qWarning() << "Failed to open file";
         return;
     }
 
