@@ -18,6 +18,10 @@ public:
 private slots:
     void on_createNoteButton_clicked();
 
+    void on_actionClear_triggered();
+
+    void on_actionExit_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

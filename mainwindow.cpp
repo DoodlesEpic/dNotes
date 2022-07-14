@@ -32,3 +32,17 @@ void MainWindow::on_createNoteButton_clicked()
     out << noteText;
 }
 
+
+void MainWindow::on_actionClear_triggered()
+{
+    ui->textEdit->clear();
+    qDebug() << "Note clear";
+}
+
+
+void MainWindow::on_actionExit_triggered()
+{
+    qDebug() << "Leaving...";
+    qApp->exit();
+}
+
