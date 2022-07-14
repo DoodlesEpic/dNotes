@@ -62,7 +62,7 @@
       <widget class="QTextEdit" name="textEdit"/>
      </item>
      <item alignment="Qt::AlignRight">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="createNoteButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -89,7 +89,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
