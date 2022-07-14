@@ -21,6 +21,8 @@ private slots:
     void on_actionClear_triggered();
     void on_actionExit_triggered();
 
+    void on_actionAbout_triggered();
+
 private:
     Ui::MainWindow *ui;
     bool saveFile(const QString &fileName, const QString text);

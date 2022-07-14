@@ -82,3 +82,12 @@ void MainWindow::on_actionExit_triggered()
     qApp->exit();
 }
 
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QMessageBox::about(this, tr("About QtNotes"),
+               tr("<b>QtNotes</b> is a suckless, free and open source cross platform note taking application. <br><br>"
+                  "Developed by <a href='https://github.com/DoodlesEpic'>Doodles</a>. <br>"
+                  "The source code is available <a href='https://github.com/DoodlesEpic/QtNotes'>here</a>. <br>"
+                  "Licensed under the GNU GPL V3 free software license"));
+}
