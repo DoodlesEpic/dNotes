@@ -19,10 +19,10 @@ private slots:
     void on_createNoteButton_clicked();
 
     void on_actionClear_triggered();
-
     void on_actionExit_triggered();
 
 private:
     Ui::MainWindow *ui;
+    bool saveFile(const QString &fileName, const QString text);
 };
 #endif // MAINWINDOW_H
