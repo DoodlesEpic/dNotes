@@ -3,7 +3,7 @@
 _realname=gtknotes
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=42.0
+pkgver=0.1.0
 pkgrel=1
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
@@ -31,19 +31,11 @@ options=('strip' 'staticlibs')
 license=("GPL")
 url="https://www.doodles.dev"
 install=${_realname}-${MSYSTEM}.install
-source=(https://download.gnome.org/sources/${_realname}/${pkgver%.*}/${_realname}-${pkgver}.tar.xz
-        "0001-workaround-no-delayed-loading.patch")
-sha256sums=('a87991f42961eb4f6abcdbaabb784760c23aeaeefae6363d3e21a61e9c458437'
-            '96f71347451a4443e29135853abea2260e3d4cc32b1691569f2669f18720dd52')
+source=(https://github.com/DoodlesEpic/QtNotes/archive/refs/tags/v${pkgver}.tar.gz)
+sha256sums=('479d186d960ec5b3cb7ea79af5b2337306593ffa828d08a6c74ee017a87e4304')
 
 prepare() {
   cd "${srcdir}"/${_realname}-${pkgver}
-
-  # originally from gedit
-  # gedit requires delayed loading which isn't supported by meson
-  # yet, so move the lib to /bin.
-  # https://github.com/mesonbuild/meson/issues/5093
-  patch -Np1 -i "${srcdir}"/0001-workaround-no-delayed-loading.patch
 }
 
 build() {
