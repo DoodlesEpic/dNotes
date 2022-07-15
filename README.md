@@ -1,8 +1,8 @@
-# QtNotes
+# GTK Notes
 
-A suckless, cross-platform, simple note taking application developed with Qt 6. This project currently uses qmake to make things easier so you will need the official Qt Creator IDE to compile and work on this.
+A simple, cross-platform, note taking application developed with GTK 4. This project is developed mainly on GNOME using GNOME Builder as the IDE and Cambalache to build the UI.
 
-![Screenshot on first commit](https://user-images.githubusercontent.com/37254797/177897627-5091b7ff-86bf-43f2-a2a7-33da916e314d.png)
+![Screenshot on Linux Fedora](https://user-images.githubusercontent.com/37254797/179142229-4e1bc190-1ede-4ac0-aa5c-1005ab5ae734.png)
 
 ## License
 
