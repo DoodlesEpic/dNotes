@@ -1,0 +1,7 @@
+data/dev.doodles.gtknotes.desktop.in
+data/dev.doodles.gtknotes.appdata.xml.in
+data/dev.doodles.gtknotes.gschema.xml
+src/gtknotes-window.ui
+src/main.c
+src/gtknotes-window.c
+
