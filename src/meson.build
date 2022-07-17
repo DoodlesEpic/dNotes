@@ -5,7 +5,9 @@ gtknotes_sources = [
 ]
 
 gtknotes_deps = [
-  dependency('libadwaita-1', version: '>= 1.0'),
+  dependency('gio-2.0', version: '>= 2.50'),
+  dependency('gtk4', version: '>= 4.2'),
+  dependency('gmodule-2.0', version: '>= 2.0'),
 ]
 
 gnome = import('gnome')

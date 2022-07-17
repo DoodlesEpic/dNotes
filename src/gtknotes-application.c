@@ -24,7 +24,7 @@ struct _GtknotesApplication
   GtkApplication parent_instance;
 };
 
-G_DEFINE_TYPE (GtknotesApplication, gtknotes_application, ADW_TYPE_APPLICATION)
+G_DEFINE_TYPE (GtknotesApplication, gtknotes_application, GTK_TYPE_APPLICATION)
 
 GtknotesApplication *
 gtknotes_application_new (gchar *application_id,
