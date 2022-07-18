@@ -2,7 +2,7 @@
 
 A simple, cross-platform, note taking application developed with GTK 4. This project is developed mainly on GNOME using GNOME Builder as the IDE and Cambalache to build the UI.
 
-![Screenshot on Linux Fedora](https://user-images.githubusercontent.com/37254797/179142229-4e1bc190-1ede-4ac0-aa5c-1005ab5ae734.png)
+![Screenshot from 2022-07-18 01-37-15](https://user-images.githubusercontent.com/37254797/179446205-b8b47c01-3c87-42d4-be6d-d5e4457fe870.png)
 
 ## License
 
