@@ -27,6 +27,9 @@
 	(1,6,"GtkButton","label","Create note",None,None,None,None,None),
 	(1,6,"GtkWidget","halign","end",None,None,None,None,None),
 	(1,7,"GtkTextBuffer","text","Your note",None,None,None,None,None),
-	(1,8,"GtkTextView","buffer","7",None,None,None,None,None)
+	(1,8,"GtkTextView","buffer","7",None,None,None,None,None),
+	(1,8,"GtkTextView","wrap-mode","word",None,None,None,None,None),
+	(1,8,"GtkWidget","hexpand","True",None,None,None,None,None),
+	(1,8,"GtkWidget","vexpand","True",None,None,None,None,None)
   </object_property>
 </cambalache-project>

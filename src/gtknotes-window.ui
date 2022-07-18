@@ -27,6 +27,9 @@
         <child>
           <object class="GtkTextView" id="NoteText">
             <property name="buffer">Note</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="wrap-mode">word</property>
           </object>
         </child>
         <child>
