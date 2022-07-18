@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Created with Cambalache 0.10.2 -->
+<!-- Created with Cambalache 0.10.3 -->
 <interface>
   <!-- interface-name gtknotes.ui -->
   <requires lib="gtk" version="4.6"/>
--  <template class="GtknotesWindow" parent="GtkApplicationWindow">
+  <template class="GtknotesWindow" parent="GtkApplicationWindow">
     <child>
       <object class="GtkBox">
         <property name="margin-bottom">10</property>
@@ -13,27 +13,24 @@
         <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="Title">
             <property name="label">GTK Notes</property>
             <property name="wrap">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="Description">
             <property name="label">A free and open source cross platform note taking application</property>
             <property name="wrap">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkEntry">
-            <property name="accessible-role">progress-bar</property>
-            <property name="enable-emoji-completion">True</property>
-            <property name="placeholder-text">Your note</property>
-            <property name="vexpand">True</property>
+          <object class="GtkTextView" id="NoteText">
+            <property name="buffer">Note</property>
           </object>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="CreateNote">
             <property name="halign">end</property>
             <property name="label">Create note</property>
           </object>
@@ -41,4 +38,7 @@
       </object>
     </child>
   </template>
+  <object class="GtkTextBuffer" id="Note">
+    <property name="text">Your note</property>
+  </object>
 </interface>
