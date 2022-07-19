@@ -32,4 +32,7 @@
 	(1,8,"GtkWidget","hexpand","True",None,None,None,None,None),
 	(1,8,"GtkWidget","vexpand","True",None,None,None,None,None)
   </object_property>
+  <object_signal>
+	(1,1,6,"GtkButton","clicked","handle_create_note",None,None,None,None,None)
+  </object_signal>
 </cambalache-project>

@@ -35,3 +35,5 @@ static void gtknotes_window_class_init(GtknotesWindowClass *klass) {
 static void gtknotes_window_init(GtknotesWindow *self) {
   gtk_widget_init_template(GTK_WIDGET(self));
 }
+
+void handle_create_note(GtkButton *b) { g_print("Create note\n"); }
