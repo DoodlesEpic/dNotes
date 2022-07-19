@@ -24,6 +24,7 @@ G_BEGIN_DECLS
 
 #define GTKNOTES_TYPE_WINDOW (gtknotes_window_get_type())
 
-G_DECLARE_FINAL_TYPE (GtknotesWindow, gtknotes_window, GTKNOTES, WINDOW, GtkApplicationWindow)
+G_DECLARE_FINAL_TYPE(GtknotesWindow, gtknotes_window, GTKNOTES, WINDOW,
+                     GtkApplicationWindow)
 
 G_END_DECLS
