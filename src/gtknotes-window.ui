@@ -25,8 +25,8 @@
           </object>
         </child>
         <child>
-          <object class="GtkTextView" id="NoteText">
-            <property name="buffer">Note</property>
+          <object class="GtkTextView" id="Note">
+            <property name="buffer">NoteBuffer</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <property name="wrap-mode">word</property>
@@ -42,7 +42,8 @@
       </object>
     </child>
   </template>
-  <object class="GtkTextBuffer" id="Note">
+  <object class="GtkTextBuffer" id="NoteBuffer">
     <property name="text">Your note</property>
+    <signal name="changed" handler="handle_note_text_changed"/>
   </object>
 </interface>

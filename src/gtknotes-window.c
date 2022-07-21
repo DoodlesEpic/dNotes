@@ -37,3 +37,13 @@ static void gtknotes_window_init(GtknotesWindow *self) {
 }
 
 void handle_create_note(GtkButton *b) { g_print("Create note\n"); }
+
+void handle_note_text_changed(GtkTextBuffer *buffer) {
+  GtkTextIter start;
+  GtkTextIter end;
+
+  gtk_text_buffer_get_start_iter(buffer, &start);
+  gtk_text_buffer_get_end_iter(buffer, &end);
+
+  g_print("%s\n", gtk_text_buffer_get_text(buffer, &start, &end, FALSE));
+}
