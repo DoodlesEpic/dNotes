@@ -30,4 +30,6 @@ G_DECLARE_FINAL_TYPE(GtknotesWindow, gtknotes_window, GTKNOTES, WINDOW,
 void handle_create_note(GtkButton *b);
 void handle_note_text_changed(GtkTextBuffer *buffer);
 
+static void on_response(GtkNativeDialog *native, int response);
+
 G_END_DECLS

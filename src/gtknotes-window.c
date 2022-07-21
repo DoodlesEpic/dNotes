@@ -26,6 +26,9 @@ struct _GtknotesWindow {
 G_DEFINE_TYPE(GtknotesWindow, gtknotes_window, GTK_TYPE_APPLICATION_WINDOW)
 
 GtkTextBuffer *note_buffer;
+GtkFileChooserNative *native;
+GtkFileChooser *chooser;
+GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
 
 static void gtknotes_window_class_init(GtknotesWindowClass *klass) {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
@@ -36,7 +39,15 @@ static void gtknotes_window_class_init(GtknotesWindowClass *klass) {
 
 static void gtknotes_window_init(GtknotesWindow *self) {
   gtk_widget_init_template(GTK_WIDGET(self));
+
+  // Create the native dialog to be shown when saving the note
+  GtkApplicationWindow parent_instance = self->parent_instance;
+  native = gtk_file_chooser_native_new(
+      "Save File", GTK_WINDOW(&parent_instance), action, "_Save", "_Cancel");
+  chooser = GTK_FILE_CHOOSER(native);
 }
+
+void handle_note_text_changed(GtkTextBuffer *buffer) { note_buffer = buffer; }
 
 void handle_create_note(GtkButton *b) {
   GtkTextIter start;
@@ -46,6 +57,21 @@ void handle_create_note(GtkButton *b) {
   gtk_text_buffer_get_end_iter(note_buffer, &end);
 
   g_print("%s\n", gtk_text_buffer_get_text(note_buffer, &start, &end, FALSE));
+
+  // Show the native file dialog we created on window init
+  gtk_file_chooser_set_current_name(chooser, "note.txt");
+  g_signal_connect(native, "response", G_CALLBACK(on_response), NULL);
+  gtk_native_dialog_show(GTK_NATIVE_DIALOG(native));
 }
 
-void handle_note_text_changed(GtkTextBuffer *buffer) { note_buffer = buffer; }
+static void on_response(GtkNativeDialog *native, int response) {
+  if (response == GTK_RESPONSE_ACCEPT) {
+    chooser = GTK_FILE_CHOOSER(native);
+    GFile *file = gtk_file_chooser_get_file(chooser);
+
+    // TODO: Implement save to file
+    // save_to_file(file);
+
+    g_object_unref(file);
+  }
+}
