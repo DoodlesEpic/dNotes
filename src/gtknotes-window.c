@@ -69,9 +69,21 @@ void on_response(GtkNativeDialog *native, int response) {
     chooser = GTK_FILE_CHOOSER(native);
     GFile *file = gtk_file_chooser_get_file(chooser);
 
-    // TODO: Implement save to file
-    // save_to_file(file);
+    save_to_file(file);
 
     g_object_unref(file);
   }
+}
+
+void save_to_file(GFile *file) {
+  GtkTextIter start;
+  GtkTextIter end;
+
+  gtk_text_buffer_get_start_iter(note_buffer, &start);
+  gtk_text_buffer_get_end_iter(note_buffer, &end);
+
+  g_file_set_contents(
+      g_file_get_path(file),
+      gtk_text_buffer_get_text(note_buffer, &start, &end, FALSE),
+      gtk_text_buffer_get_char_count(note_buffer), NULL);
 }
