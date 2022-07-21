@@ -28,7 +28,6 @@ G_DEFINE_TYPE(GtknotesWindow, gtknotes_window, GTK_TYPE_APPLICATION_WINDOW)
 GtkTextBuffer *note_buffer;
 GtkFileChooserNative *native;
 GtkFileChooser *chooser;
-GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
 
 static void gtknotes_window_class_init(GtknotesWindowClass *klass) {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
@@ -43,7 +42,8 @@ static void gtknotes_window_init(GtknotesWindow *self) {
   // Create the native dialog to be shown when saving the note
   GtkApplicationWindow parent_instance = self->parent_instance;
   native = gtk_file_chooser_native_new(
-      "Save File", GTK_WINDOW(&parent_instance), action, "_Save", "_Cancel");
+      "Save File", GTK_WINDOW(&parent_instance), GTK_FILE_CHOOSER_ACTION_SAVE,
+      "_Save", "_Cancel");
   chooser = GTK_FILE_CHOOSER(native);
 }
 
