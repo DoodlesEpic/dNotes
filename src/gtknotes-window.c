@@ -25,6 +25,8 @@ struct _GtknotesWindow {
 
 G_DEFINE_TYPE(GtknotesWindow, gtknotes_window, GTK_TYPE_APPLICATION_WINDOW)
 
+GtkTextBuffer *note_buffer;
+
 static void gtknotes_window_class_init(GtknotesWindowClass *klass) {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
@@ -36,14 +38,14 @@ static void gtknotes_window_init(GtknotesWindow *self) {
   gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-void handle_create_note(GtkButton *b) { g_print("Create note\n"); }
-
-void handle_note_text_changed(GtkTextBuffer *buffer) {
+void handle_create_note(GtkButton *b) {
   GtkTextIter start;
   GtkTextIter end;
 
-  gtk_text_buffer_get_start_iter(buffer, &start);
-  gtk_text_buffer_get_end_iter(buffer, &end);
+  gtk_text_buffer_get_start_iter(note_buffer, &start);
+  gtk_text_buffer_get_end_iter(note_buffer, &end);
 
-  g_print("%s\n", gtk_text_buffer_get_text(buffer, &start, &end, FALSE));
+  g_print("%s\n", gtk_text_buffer_get_text(note_buffer, &start, &end, FALSE));
 }
+
+void handle_note_text_changed(GtkTextBuffer *buffer) { note_buffer = buffer; }
