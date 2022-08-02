@@ -5,38 +5,61 @@
   <requires lib="gtk" version="4.6"/>
   <template class="GtknotesWindow" parent="GtkApplicationWindow">
     <child>
-      <object class="GtkBox">
-        <property name="margin-bottom">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-start">10</property>
-        <property name="margin-top">10</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+      <object class="GtkPaned">
         <child>
-          <object class="GtkLabel" id="Title">
-            <property name="label">GTK Notes</property>
-            <property name="wrap">True</property>
+          <object class="GtkBox">
+            <property name="margin-bottom">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-start">10</property>
+            <property name="margin-top">10</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">10</property>
+            <child>
+              <object class="GtkLabel" id="Title">
+                <property name="label">GTK Notes</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="Description">
+                <property name="label">A free and open source cross platform note taking application</property>
+                <property name="wrap">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparator"/>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">Note list</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="Description">
-            <property name="label">A free and open source cross platform note taking application</property>
-            <property name="wrap">True</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkTextView" id="Note">
-            <property name="buffer">NoteBuffer</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="wrap-mode">word</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="CreateNote">
-            <property name="halign">end</property>
-            <property name="label">Create note</property>
-            <signal name="clicked" handler="handle_create_note"/>
+          <object class="GtkBox">
+            <property name="margin-bottom">10</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">10</property>
+            <child>
+              <object class="GtkTextView" id="Note">
+                <property name="bottom-margin">10</property>
+                <property name="buffer">NoteBuffer</property>
+                <property name="hexpand">True</property>
+                <property name="left-margin">10</property>
+                <property name="right-margin">10</property>
+                <property name="top-margin">10</property>
+                <property name="vexpand">True</property>
+                <property name="wrap-mode">word</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="CreateNote">
+                <property name="halign">end</property>
+                <property name="label">Create note</property>
+                <property name="margin-end">10</property>
+                <signal name="clicked" handler="handle_create_note"/>
+              </object>
+            </child>
           </object>
         </child>
       </object>
