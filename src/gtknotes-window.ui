@@ -14,6 +14,7 @@
             <property name="margin-top">10</property>
             <property name="orientation">vertical</property>
             <property name="spacing">10</property>
+            <property name="width-request">200</property>
             <child>
               <object class="GtkLabel" id="Title">
                 <property name="label">GTK Notes</property>
@@ -27,11 +28,6 @@
             </child>
             <child>
               <object class="GtkSeparator"/>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label">Note list</property>
-              </object>
             </child>
           </object>
         </child>
