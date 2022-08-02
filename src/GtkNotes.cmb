@@ -14,7 +14,11 @@
 	(1,16,"GtkButton","CreateNote",12,None,None,None,3),
 	(1,17,"GtkLabel","Title",10,None,None,None,None),
 	(1,18,"GtkLabel","Description",10,None,None,None,1),
-	(1,19,"GtkSeparator",None,10,None,None,None,2)
+	(1,19,"GtkSeparator",None,10,None,None,None,2),
+	(1,20,"GtkBox","NoteList",10,None,None,None,3),
+	(1,21,"GtkButton",None,20,None,None,None,None),
+	(1,22,"GtkButton",None,20,None,None,None,None),
+	(1,23,"GtkButton",None,20,None,None,None,2)
   </object>
   <object_property>
 	(1,7,"GtkTextBuffer","text","Your note",None,None,None,None,None),
@@ -40,8 +44,17 @@
 	(1,16,"GtkWidget","halign","end",None,None,None,None,None),
 	(1,16,"GtkWidget","margin-end","10",None,None,None,None,None),
 	(1,17,"GtkLabel","label","GTK Notes",None,None,None,None,None),
+	(1,17,"GtkLabel","wrap","True",None,None,None,None,None),
+	(1,17,"GtkLabel","xalign","0.0",None,None,None,None,None),
 	(1,18,"GtkLabel","label","A free and open source cross platform note taking application",None,None,None,None,None),
-	(1,18,"GtkLabel","wrap","True",None,None,None,None,None)
+	(1,18,"GtkLabel","wrap","True",None,None,None,None,None),
+	(1,18,"GtkLabel","xalign","0.0",None,None,None,None,None),
+	(1,20,"GtkBox","spacing","10",None,None,None,None,None),
+	(1,20,"GtkOrientable","orientation","vertical",None,None,None,None,None),
+	(1,20,"GtkWidget","height-request","2",None,None,None,None,None),
+	(1,21,"GtkButton","label","First note",None,None,None,None,None),
+	(1,22,"GtkButton","label","Second note",None,None,None,None,None),
+	(1,23,"GtkButton","label","Third note",None,None,None,None,None)
   </object_property>
   <object_signal>
 	(4,1,7,"GtkTextBuffer","changed","handle_note_text_changed",None,None,None,None,None),

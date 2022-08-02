@@ -18,16 +18,41 @@
             <child>
               <object class="GtkLabel" id="Title">
                 <property name="label">GTK Notes</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0.0</property>
               </object>
             </child>
             <child>
               <object class="GtkLabel" id="Description">
                 <property name="label">A free and open source cross platform note taking application</property>
                 <property name="wrap">True</property>
+                <property name="xalign">0.0</property>
               </object>
             </child>
             <child>
               <object class="GtkSeparator"/>
+            </child>
+            <child>
+              <object class="GtkBox" id="NoteList">
+                <property name="height-request">2</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkButton">
+                    <property name="label">First note</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton">
+                    <property name="label">Second note</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton">
+                    <property name="label">Third note</property>
+                  </object>
+                </child>
+              </object>
             </child>
           </object>
         </child>
