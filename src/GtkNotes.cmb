@@ -21,6 +21,7 @@
 	(1,23,"GtkButton",None,20,None,None,None,2)
   </object>
   <object_property>
+	(1,1,"GtkWindow","title","dNotes",None,None,None,None,None),
 	(1,7,"GtkTextBuffer","text","Your note",None,None,None,None,None),
 	(1,10,"GtkBox","spacing","10",None,None,None,None,None),
 	(1,10,"GtkOrientable","orientation","vertical",None,None,None,None,None),
