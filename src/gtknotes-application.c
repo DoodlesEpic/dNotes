@@ -69,8 +69,8 @@ static void gtknotes_application_class_init(GtknotesApplicationClass *klass) {
   app_class->activate = gtknotes_application_activate;
 }
 
-static void gtknotes_application_show_about(GSimpleAction *action,
-                                            GVariant *parameter,
+static void gtknotes_application_show_about(G_GNUC_UNUSED GSimpleAction *action,
+                                            G_GNUC_UNUSED GVariant *parameter,
                                             gpointer user_data) {
   GtknotesApplication *self = GTKNOTES_APPLICATION(user_data);
   GtkWindow *window = NULL;
