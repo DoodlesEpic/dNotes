@@ -33,4 +33,6 @@ void handle_note_text_changed(GtkTextBuffer *buffer);
 void on_response(GtkNativeDialog *native, int response);
 void save_to_file(GFile *file);
 
+void list_notes();
+
 G_END_DECLS
