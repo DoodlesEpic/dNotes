@@ -31,19 +31,15 @@ static GtkFileChooser *chooser;
 
 static void gtknotes_window_class_init(GtknotesWindowClass *klass) {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
-
-  gtk_widget_class_set_template_from_resource(
-      widget_class, "/dev/doodles/gtknotes/gtknotes-window.ui");
+  gtk_widget_class_set_template_from_resource(widget_class, "/dev/doodles/gtknotes/gtknotes-window.ui");
 }
 
 static void gtknotes_window_init(GtknotesWindow *self) {
   gtk_widget_init_template(GTK_WIDGET(self));
+  GtkApplicationWindow parent_instance = self->parent_instance;
 
   // Create the native dialog to be shown when saving the note
-  GtkApplicationWindow parent_instance = self->parent_instance;
-  native = gtk_file_chooser_native_new(
-      "Save File", GTK_WINDOW(&parent_instance), GTK_FILE_CHOOSER_ACTION_SAVE,
-      "_Save", "_Cancel");
+  native = gtk_file_chooser_native_new("Save File", GTK_WINDOW(&parent_instance), GTK_FILE_CHOOSER_ACTION_SAVE, "_Save", "_Cancel");
   chooser = GTK_FILE_CHOOSER(native);
   g_signal_connect(native, "response", G_CALLBACK(on_response), NULL);
 }
@@ -88,24 +84,15 @@ void save_to_file(GFile *file) {
       gtk_text_buffer_get_char_count(note_buffer), NULL);
 }
 
-// Attempt to print number of files on the data dir
-// Currently only gives 0 for some reason. Confirmed to not be caused by flatpak
-// permissions.
+// Attempt to print number of files on the data dir. Currently only gives 0
+// for some reason. Confirmed to not be caused by flatpak permissions.
 // Currently this is called in every change to the text field for testing.
 void list_notes() {
-  g_autoptr(GFile) directory =
-      g_file_new_build_filename(g_get_user_data_dir(), NULL);
+  g_autoptr(GFile) directory = g_file_new_build_filename(g_get_user_data_dir(), NULL);
   g_autoptr(GtkDirectoryList) directory_list =
       gtk_directory_list_new("standard::display-name,standard::content-type,"
                              "standard::icon,standard::size",
                              directory);
-  const GError *err = gtk_directory_list_get_error(directory_list);
-  if (err) {
-    g_print("Error\n");
-    g_print("%s\n", err->message);
-  } else {
-    g_print("No error\n");
-  }
 
   guint list_items = g_list_model_get_n_items(G_LIST_MODEL(directory_list));
   g_print("%s\n", g_get_user_data_dir());

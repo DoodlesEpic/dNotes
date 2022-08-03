@@ -24,10 +24,8 @@ G_BEGIN_DECLS
 
 #define GTKNOTES_TYPE_APPLICATION (gtknotes_application_get_type())
 
-G_DECLARE_FINAL_TYPE(GtknotesApplication, gtknotes_application, GTKNOTES,
-                     APPLICATION, GtkApplication)
+G_DECLARE_FINAL_TYPE(GtknotesApplication, gtknotes_application, GTKNOTES, APPLICATION, GtkApplication)
 
-GtknotesApplication *gtknotes_application_new(gchar *application_id,
-                                              GApplicationFlags flags);
+GtknotesApplication *gtknotes_application_new(gchar *application_id, GApplicationFlags flags);
 
 G_END_DECLS
