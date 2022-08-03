@@ -51,9 +51,7 @@ static void gtknotes_window_init(GtknotesWindow *self) {
 void handle_note_text_changed(GtkTextBuffer *buffer) { note_buffer = buffer; list_notes(); }
 
 void handle_create_note(GtkButton *b) {
-  GtkTextIter start;
-  GtkTextIter end;
-
+  GtkTextIter start, end;
   gtk_text_buffer_get_start_iter(note_buffer, &start);
   gtk_text_buffer_get_end_iter(note_buffer, &end);
 
@@ -65,6 +63,8 @@ void handle_create_note(GtkButton *b) {
 }
 
 void on_response(GtkNativeDialog *native, int response) {
+  g_assert(GTK_IS_NATIVE_DIALOG (native));
+
   if (response == GTK_RESPONSE_ACCEPT) {
     chooser = GTK_FILE_CHOOSER(native);
     g_autoptr(GFile) file = gtk_file_chooser_get_file(chooser);
@@ -73,9 +73,9 @@ void on_response(GtkNativeDialog *native, int response) {
 }
 
 void save_to_file(GFile *file) {
-  GtkTextIter start;
-  GtkTextIter end;
+  g_assert(G_IS_FILE(file));
 
+  GtkTextIter start, end;
   gtk_text_buffer_get_start_iter(note_buffer, &start);
   gtk_text_buffer_get_end_iter(note_buffer, &end);
 
