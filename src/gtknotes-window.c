@@ -50,7 +50,7 @@ static void gtknotes_window_init(GtknotesWindow *self) {
 
 void handle_note_text_changed(GtkTextBuffer *buffer) { note_buffer = buffer; list_notes(); }
 
-void handle_create_note(GtkButton *b) {
+void handle_create_note(/*GtkButton *b*/) {
   GtkTextIter start, end;
   gtk_text_buffer_get_start_iter(note_buffer, &start);
   gtk_text_buffer_get_end_iter(note_buffer, &end);

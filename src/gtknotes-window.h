@@ -27,7 +27,7 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE(GtknotesWindow, gtknotes_window, GTKNOTES, WINDOW,
                      GtkApplicationWindow)
 
-void handle_create_note(GtkButton *b);
+void handle_create_note(/*GtkButton *b*/);
 void handle_note_text_changed(GtkTextBuffer *buffer);
 
 void on_response(GtkNativeDialog *native, int response);
