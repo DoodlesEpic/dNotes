@@ -48,7 +48,10 @@ static void gtknotes_window_init(GtknotesWindow *self) {
   g_signal_connect(native, "response", G_CALLBACK(on_response), NULL);
 }
 
-void handle_note_text_changed(GtkTextBuffer *buffer) { note_buffer = buffer; list_notes(); }
+void handle_note_text_changed(GtkTextBuffer *buffer) {
+  note_buffer = buffer;
+  list_notes();
+}
 
 void handle_create_note(G_GNUC_UNUSED GtkButton *b) {
   GtkTextIter start, end;
@@ -63,7 +66,7 @@ void handle_create_note(G_GNUC_UNUSED GtkButton *b) {
 }
 
 void on_response(GtkNativeDialog *native, int response) {
-  g_assert(GTK_IS_NATIVE_DIALOG (native));
+  g_assert(GTK_IS_NATIVE_DIALOG(native));
 
   if (response == GTK_RESPONSE_ACCEPT) {
     chooser = GTK_FILE_CHOOSER(native);
@@ -90,17 +93,21 @@ void save_to_file(GFile *file) {
 // permissions.
 // Currently this is called in every change to the text field for testing.
 void list_notes() {
-  g_autoptr(GFile) directory = g_file_new_build_filename(g_get_user_data_dir(), NULL);
-  g_autoptr(GtkDirectoryList) directory_list = gtk_directory_list_new("standard::display-name,standard::content-type,standard::icon,standard::size", directory);
-  const GError *err = gtk_directory_list_get_error (directory_list);
-  if(err) {
+  g_autoptr(GFile) directory =
+      g_file_new_build_filename(g_get_user_data_dir(), NULL);
+  g_autoptr(GtkDirectoryList) directory_list =
+      gtk_directory_list_new("standard::display-name,standard::content-type,"
+                             "standard::icon,standard::size",
+                             directory);
+  const GError *err = gtk_directory_list_get_error(directory_list);
+  if (err) {
     g_print("Error\n");
     g_print("%s\n", err->message);
   } else {
     g_print("No error\n");
   }
 
-  guint list_items = g_list_model_get_n_items(G_LIST_MODEL (directory_list));
+  guint list_items = g_list_model_get_n_items(G_LIST_MODEL(directory_list));
   g_print("%s\n", g_get_user_data_dir());
   g_print("%u\n", list_items);
 }
