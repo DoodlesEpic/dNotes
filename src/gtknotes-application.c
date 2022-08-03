@@ -32,8 +32,7 @@ GtknotesApplication *gtknotes_application_new(gchar *application_id,
 }
 
 static void gtknotes_application_finalize(GObject *object) {
-  GtknotesApplication *self = (GtknotesApplication *)object;
-
+  // GtknotesApplication *self = (GtknotesApplication *)object;
   G_OBJECT_CLASS(gtknotes_application_parent_class)->finalize(object);
 }
 
