@@ -67,11 +67,8 @@ void handle_create_note(GtkButton *b) {
 void on_response(GtkNativeDialog *native, int response) {
   if (response == GTK_RESPONSE_ACCEPT) {
     chooser = GTK_FILE_CHOOSER(native);
-    GFile *file = gtk_file_chooser_get_file(chooser);
-
+    g_autoptr(GFile) file = gtk_file_chooser_get_file(chooser);
     save_to_file(file);
-
-    g_object_unref(file);
   }
 }
 
