@@ -78,17 +78,12 @@ void save_to_file(GFile *file) {
       gtk_text_buffer_get_char_count(note_buffer), NULL);
 }
 
-// Attempt to print number of files on the data dir. Currently only gives 0
-// for some reason. Confirmed to not be caused by flatpak permissions.
+// Enumerates the notes present in the data directory for the application
 // Currently this is called in every change to the text field for testing.
 void list_notes() {
-  g_autoptr(GFile) directory = g_file_new_build_filename(g_get_user_data_dir(), NULL);
-  g_autoptr(GtkDirectoryList) directory_list =
-      gtk_directory_list_new("standard::display-name,standard::content-type,"
-                             "standard::icon,standard::size",
-                             directory);
-
-  guint list_items = g_list_model_get_n_items(G_LIST_MODEL(directory_list));
-  g_print("%s\n", g_get_user_data_dir());
-  g_print("%u\n", list_items);
+  g_autoptr(GDir) directory = g_dir_open(g_get_user_data_dir(), NULL, NULL);
+  g_autofree const gchar *filename;
+  while ((filename = g_dir_read_name(directory))) {
+    printf("%s\n", filename);
+  }
 }
