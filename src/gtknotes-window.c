@@ -45,6 +45,7 @@ static void gtknotes_window_init(GtknotesWindow *self) {
       "Save File", GTK_WINDOW(&parent_instance), GTK_FILE_CHOOSER_ACTION_SAVE,
       "_Save", "_Cancel");
   chooser = GTK_FILE_CHOOSER(native);
+  g_signal_connect(native, "response", G_CALLBACK(on_response), NULL);
 }
 
 void handle_note_text_changed(GtkTextBuffer *buffer) { note_buffer = buffer; list_notes(); }
@@ -60,7 +61,6 @@ void handle_create_note(GtkButton *b) {
 
   // Show the native file dialog we created on window init
   gtk_file_chooser_set_current_name(chooser, "note.txt");
-  g_signal_connect(native, "response", G_CALLBACK(on_response), NULL);
   gtk_native_dialog_show(GTK_NATIVE_DIALOG(native));
 }
 
