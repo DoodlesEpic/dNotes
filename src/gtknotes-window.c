@@ -25,9 +25,9 @@ struct _GtknotesWindow {
 
 G_DEFINE_TYPE(GtknotesWindow, gtknotes_window, GTK_TYPE_APPLICATION_WINDOW)
 
-GtkTextBuffer *note_buffer;
-GtkFileChooserNative *native;
-GtkFileChooser *chooser;
+static GtkTextBuffer *note_buffer;
+static GtkFileChooserNative *native;
+static GtkFileChooser *chooser;
 
 static void gtknotes_window_class_init(GtknotesWindowClass *klass) {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
