@@ -50,12 +50,6 @@ void handle_note_text_changed(GtkTextBuffer *buffer) {
 }
 
 void handle_create_note(G_GNUC_UNUSED GtkButton *b) {
-  GtkTextIter start, end;
-  gtk_text_buffer_get_start_iter(note_buffer, &start);
-  gtk_text_buffer_get_end_iter(note_buffer, &end);
-
-  g_print("%s\n", gtk_text_buffer_get_text(note_buffer, &start, &end, FALSE));
-
   // Show the native file dialog we created on window init
   gtk_file_chooser_set_current_name(chooser, "note.txt");
   gtk_native_dialog_show(GTK_NATIVE_DIALOG(native));
