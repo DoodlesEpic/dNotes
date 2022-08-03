@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
    * desktop features such as file opening and single-instance applications.
    */
   app = gtknotes_application_new("dev.doodles.gtknotes",
-                                 G_APPLICATION_FLAGS_NONE);
+                                 G_APPLICATION_DEFAULT_FLAGS);
 
   /*
    * Run the application. This function will block until the application
