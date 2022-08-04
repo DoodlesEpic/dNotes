@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
   // Create and run a new GtkApplication, which manages our main loop,
   // application windows, integration with the window manager/compositor, and
   // desktop features such as file opening and single-instance applications.
-  app = gtknotes_application_new("dev.doodles.gtknotes", G_APPLICATION_DEFAULT_FLAGS);
+  app = gtknotes_application_new("dev.doodles.gtknotes", G_APPLICATION_FLAGS_NONE);
   ret = g_application_run(G_APPLICATION(app), argc, argv);
 
   return ret;
