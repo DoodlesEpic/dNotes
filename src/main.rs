@@ -52,6 +52,7 @@ impl Widgets<AppModel, ()> for AppWidgets {
 
                 append = &gtk::TextView {
                     set_margin_all: 5,
+                    set_wrap_mode: gtk::WrapMode::Word,
                     set_buffer: Some(&model.text),
                 },
 
