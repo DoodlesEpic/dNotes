@@ -31,11 +31,11 @@ impl SimpleComponent for AppModel {
                 set_spacing: 5,
                 set_margin_all: 5,
 
+                gtk::TextView::with_buffer(&model.text) {
 
                 gtk::TextView {
                     set_margin_all: 5,
                     set_wrap_mode: gtk::WrapMode::WordChar,
-                    set_buffer: Some(&model.text),
                 },
 
                 gtk::Button::with_label("Save") {
