@@ -73,3 +73,6 @@ Thumbs.db
 
 # Clangd cache files
 .cache
+
+# Artifacts
+target
