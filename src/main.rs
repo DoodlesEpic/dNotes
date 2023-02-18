@@ -1,14 +1,15 @@
-use gtk::prelude::{BoxExt, ButtonExt, GtkWindowExt, OrientableExt};
+use gtk::prelude::*;
 use relm4::{send, AppUpdate, Model, RelmApp, Sender, WidgetPlus, Widgets};
 
 #[derive(Default)]
 struct AppModel {
-    counter: u8,
+    text: gtk::TextBuffer,
+    hidden: bool,
 }
 
 enum AppMsg {
-    Increment,
-    Decrement,
+    Save,
+    Close,
 }
 
 impl Model for AppModel {
@@ -20,11 +21,17 @@ impl Model for AppModel {
 impl AppUpdate for AppModel {
     fn update(&mut self, msg: AppMsg, _components: &(), _sender: Sender<AppMsg>) -> bool {
         match msg {
-            AppMsg::Increment => {
-                self.counter = self.counter.wrapping_add(1);
+            AppMsg::Save => {
+                // Print the value of the text box
+                self.hidden = !self.hidden;
+
+                // Open the file chooser and get the path
+
+                // Save the contents of AppModel.text to the file
             }
-            AppMsg::Decrement => {
-                self.counter = self.counter.wrapping_sub(1);
+
+            AppMsg::Close => {
+                self.hidden = false;
             }
         }
         true
@@ -35,7 +42,7 @@ impl AppUpdate for AppModel {
 impl Widgets<AppModel, ()> for AppWidgets {
     view! {
         gtk::ApplicationWindow {
-            set_title: Some("Simple app"),
+            set_title: Some("dNotes app"),
             set_default_width: 300,
             set_default_height: 100,
             set_child = Some(&gtk::Box) {
@@ -43,20 +50,31 @@ impl Widgets<AppModel, ()> for AppWidgets {
                 set_margin_all: 5,
                 set_spacing: 5,
 
-                append = &gtk::Button {
-                    set_label: "Increment",
-                    connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::Increment);
-                    },
-                },
-                append = &gtk::Button::with_label("Decrement") {
-                    connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::Decrement);
-                    },
-                },
-                append = &gtk::Label {
+                append = &gtk::TextView {
                     set_margin_all: 5,
-                    set_label: watch! { &format!("Counter: {}", model.counter) },
+                    set_buffer: Some(&model.text),
+                },
+
+                append = &gtk::Button {
+                    set_label: "Save",
+                    connect_clicked(sender) => move |_| {
+                        send!(sender, AppMsg::Save);
+                    },
+                },
+
+                append = &gtk::MessageDialog {
+                    set_modal: true,
+                    set_visible: watch!(model.hidden),
+                    set_text: Some("Save?"),
+                    add_button: args!("Save", gtk::ResponseType::Accept),
+                    add_button: args!("Cancel", gtk::ResponseType::Cancel),
+                    connect_response(sender) => move |_, resp| {
+                        send!(sender, if resp == gtk::ResponseType::Accept {
+                            AppMsg::Close
+                        } else {
+                            AppMsg::Close
+                        });
+                    }
                 }
             },
         }
