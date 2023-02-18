@@ -1,8 +1,11 @@
 use gtk::prelude::{BoxExt, ButtonExt, GtkWindowExt, OrientableExt, TextViewExt};
-use relm4::{gtk, ComponentParts, ComponentSender, RelmApp, RelmWidgetExt, SimpleComponent};
+use relm4::{
+    gtk::{self, traits::TextBufferExt, TextBuffer},
+    ComponentParts, ComponentSender, RelmApp, RelmWidgetExt, SimpleComponent,
+};
 
 struct AppModel {
-    text: String,
+    text: TextBuffer,
 }
 
 #[derive(Debug)]
@@ -12,7 +15,7 @@ enum AppMsg {
 
 #[relm4::component]
 impl SimpleComponent for AppModel {
-    type Init = String;
+    type Init = TextBuffer;
 
     type Input = AppMsg;
     type Output = ();
@@ -32,6 +35,7 @@ impl SimpleComponent for AppModel {
                 gtk::TextView {
                     set_margin_all: 5,
                     set_wrap_mode: gtk::WrapMode::WordChar,
+                    set_buffer: Some(&model.text),
                 },
 
                 gtk::Button::with_label("Save") {
@@ -61,7 +65,10 @@ impl SimpleComponent for AppModel {
         match msg {
             AppMsg::Save => {
                 // TODO: Save the text to a file
-                println!("Save button clicked");
+                let start = self.text.start_iter();
+                let end = self.text.end_iter();
+                let text = self.text.text(&start, &end, true);
+                println!("{}", text);
             }
         }
     }
@@ -69,5 +76,5 @@ impl SimpleComponent for AppModel {
 
 fn main() {
     let app = RelmApp::new("dev.doodles.dnotes");
-    app.run::<AppModel>("".to_string());
+    app.run::<AppModel>(gtk::TextBuffer::new(Some(&gtk::TextTagTable::new())));
 }
