@@ -43,8 +43,8 @@ impl Widgets<AppModel, ()> for AppWidgets {
     view! {
         gtk::ApplicationWindow {
             set_title: Some("dNotes app"),
-            set_default_width: 300,
-            set_default_height: 100,
+            set_default_width: 600,
+            set_default_height: 400,
             set_child = Some(&gtk::Box) {
                 set_orientation: gtk::Orientation::Vertical,
                 set_margin_all: 5,
