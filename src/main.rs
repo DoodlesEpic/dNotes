@@ -1,67 +1,73 @@
-use gtk::prelude::*;
-use relm4::{send, AppUpdate, Model, RelmApp, Sender, WidgetPlus, Widgets};
+use gtk::prelude::{BoxExt, ButtonExt, GtkWindowExt, OrientableExt, TextViewExt};
+use relm4::{gtk, ComponentParts, ComponentSender, RelmApp, RelmWidgetExt, SimpleComponent};
 
-#[derive(Default)]
 struct AppModel {
-    text: gtk::TextBuffer,
+    text: String,
 }
 
+#[derive(Debug)]
 enum AppMsg {
     Save,
 }
 
-impl Model for AppModel {
-    type Msg = AppMsg;
-    type Widgets = AppWidgets;
-    type Components = ();
-}
+#[relm4::component]
+impl SimpleComponent for AppModel {
+    type Init = String;
 
-impl AppUpdate for AppModel {
-    fn update(&mut self, msg: AppMsg, _components: &(), _sender: Sender<AppMsg>) -> bool {
-        match msg {
-            AppMsg::Save => {
-                // Print the value of the text box
+    type Input = AppMsg;
+    type Output = ();
 
-                // Open the file chooser and get the path
-
-                // Save the contents of AppModel.text to the file
-            }
-        }
-        true
-    }
-}
-
-#[relm4::widget]
-impl Widgets<AppModel, ()> for AppWidgets {
     view! {
-        gtk::ApplicationWindow {
-            set_title: Some("dNotes app"),
+        gtk::Window {
+            set_title: Some("dNotes"),
             set_default_width: 600,
             set_default_height: 400,
-            set_child = Some(&gtk::Box) {
+
+            gtk::Box {
                 set_orientation: gtk::Orientation::Vertical,
-                set_margin_all: 5,
                 set_spacing: 5,
+                set_margin_all: 5,
 
-                append = &gtk::TextView {
+
+                gtk::TextView {
                     set_margin_all: 5,
-                    set_wrap_mode: gtk::WrapMode::Word,
-                    set_buffer: Some(&model.text),
+                    set_wrap_mode: gtk::WrapMode::WordChar,
                 },
 
-                append = &gtk::Button {
-                    set_label: "Save",
-                    connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::Save);
-                    },
+                gtk::Button::with_label("Save") {
+                    connect_clicked[sender] => move |_| {
+                        sender.input(AppMsg::Save);
+                    }
                 },
-            },
+            }
+        }
+    }
+
+    // Initialize the UI.
+    fn init(
+        text: Self::Init,
+        root: &Self::Root,
+        sender: ComponentSender<Self>,
+    ) -> ComponentParts<Self> {
+        let model = AppModel { text };
+
+        // Insert the macro code generation here
+        let widgets = view_output!();
+
+        ComponentParts { model, widgets }
+    }
+
+    fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
+        match msg {
+            AppMsg::Save => {
+                // TODO: Save the text to a file
+                println!("Save button clicked");
+            }
         }
     }
 }
 
 fn main() {
-    let model = AppModel::default();
-    let app = RelmApp::new(model);
-    app.run();
+    let app = RelmApp::new("dev.doodles.dnotes");
+    app.run::<AppModel>("".to_string());
 }
