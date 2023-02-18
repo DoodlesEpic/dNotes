@@ -4,12 +4,10 @@ use relm4::{send, AppUpdate, Model, RelmApp, Sender, WidgetPlus, Widgets};
 #[derive(Default)]
 struct AppModel {
     text: gtk::TextBuffer,
-    hidden: bool,
 }
 
 enum AppMsg {
     Save,
-    Close,
 }
 
 impl Model for AppModel {
@@ -23,15 +21,10 @@ impl AppUpdate for AppModel {
         match msg {
             AppMsg::Save => {
                 // Print the value of the text box
-                self.hidden = !self.hidden;
 
                 // Open the file chooser and get the path
 
                 // Save the contents of AppModel.text to the file
-            }
-
-            AppMsg::Close => {
-                self.hidden = false;
             }
         }
         true
@@ -62,21 +55,6 @@ impl Widgets<AppModel, ()> for AppWidgets {
                         send!(sender, AppMsg::Save);
                     },
                 },
-
-                append = &gtk::MessageDialog {
-                    set_modal: true,
-                    set_visible: watch!(model.hidden),
-                    set_text: Some("Save?"),
-                    add_button: args!("Save", gtk::ResponseType::Accept),
-                    add_button: args!("Cancel", gtk::ResponseType::Cancel),
-                    connect_response(sender) => move |_, resp| {
-                        send!(sender, if resp == gtk::ResponseType::Accept {
-                            AppMsg::Close
-                        } else {
-                            AppMsg::Close
-                        });
-                    }
-                }
             },
         }
     }
