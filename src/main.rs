@@ -1,70 +1,70 @@
-use gtk::prelude::*;
-use gtk::Box;
-use gtk::Button;
-use gtk::Label;
-use gtk::Orientation;
-use gtk::{glib, Application, ApplicationWindow};
+use gtk::prelude::{BoxExt, ButtonExt, GtkWindowExt, OrientableExt};
+use relm4::{send, AppUpdate, Model, RelmApp, Sender, WidgetPlus, Widgets};
 
-const APP_ID: &str = "dev.doodles.dnotes";
-
-fn main() -> glib::ExitCode {
-    // Create a new application
-    let app = Application::builder().application_id(APP_ID).build();
-
-    // Connect to "activate" signal of `app`
-    app.connect_activate(build_ui);
-
-    // Run the application
-    app.run()
+#[derive(Default)]
+struct AppModel {
+    counter: u8,
 }
 
-fn build_ui(app: &Application) {
-    // Create a title
-    let title = Label::builder()
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .label("dNotes")
-        .can_focus(false)
-        .build();
+enum AppMsg {
+    Increment,
+    Decrement,
+}
 
-    // Create a button with label and margins
-    let button = Button::builder()
-        .label("Press me!")
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .build();
+impl Model for AppModel {
+    type Msg = AppMsg;
+    type Widgets = AppWidgets;
+    type Components = ();
+}
 
-    let app_box = Box::builder().orientation(Orientation::Vertical).build();
-    app_box.append(&title);
-    app_box.append(&button);
-
-    // Connect to "clicked" signal of `button`
-    button.connect_clicked(|button| match button.label() {
-        Some(label) => match label.as_str() {
-            "Press me!" => {
-                button.set_label("Pressed!");
+impl AppUpdate for AppModel {
+    fn update(&mut self, msg: AppMsg, _components: &(), _sender: Sender<AppMsg>) -> bool {
+        match msg {
+            AppMsg::Increment => {
+                self.counter = self.counter.wrapping_add(1);
             }
-            "Pressed!" => {
-                button.set_label("Press me again!");
+            AppMsg::Decrement => {
+                self.counter = self.counter.wrapping_sub(1);
             }
-            _ => {
-                button.set_label("Press me!");
-            }
-        },
-        None => println!("No label"),
-    });
+        }
+        true
+    }
+}
 
-    // Create a window
-    let window = ApplicationWindow::builder()
-        .application(app)
-        .title("dNotes")
-        .child(&app_box)
-        .build();
+#[relm4::widget]
+impl Widgets<AppModel, ()> for AppWidgets {
+    view! {
+        gtk::ApplicationWindow {
+            set_title: Some("Simple app"),
+            set_default_width: 300,
+            set_default_height: 100,
+            set_child = Some(&gtk::Box) {
+                set_orientation: gtk::Orientation::Vertical,
+                set_margin_all: 5,
+                set_spacing: 5,
 
-    // Present window
-    window.present();
+                append = &gtk::Button {
+                    set_label: "Increment",
+                    connect_clicked(sender) => move |_| {
+                        send!(sender, AppMsg::Increment);
+                    },
+                },
+                append = &gtk::Button::with_label("Decrement") {
+                    connect_clicked(sender) => move |_| {
+                        send!(sender, AppMsg::Decrement);
+                    },
+                },
+                append = &gtk::Label {
+                    set_margin_all: 5,
+                    set_label: watch! { &format!("Counter: {}", model.counter) },
+                }
+            },
+        }
+    }
+}
+
+fn main() {
+    let model = AppModel::default();
+    let app = RelmApp::new(model);
+    app.run();
 }
