@@ -1,6 +1,10 @@
 use gtk::prelude::{BoxExt, ButtonExt, GtkWindowExt, OrientableExt, TextViewExt};
 use relm4::{
-    gtk::{self, traits::TextBufferExt, TextBuffer},
+    gtk::{
+        self,
+        traits::{TextBufferExt, WidgetExt},
+        TextBuffer,
+    },
     ComponentParts, ComponentSender, RelmApp, RelmWidgetExt, SimpleComponent,
 };
 
@@ -28,13 +32,13 @@ impl SimpleComponent for AppModel {
 
             gtk::Box {
                 set_orientation: gtk::Orientation::Vertical,
-                set_spacing: 5,
-                set_margin_all: 5,
 
                 gtk::TextView::with_buffer(&model.text) {
-
-                gtk::TextView {
-                    set_margin_all: 5,
+                    set_vexpand: true,
+                    set_bottom_margin: 10,
+                    set_left_margin: 10,
+                    set_right_margin: 10,
+                    set_top_margin: 10,
                     set_wrap_mode: gtk::WrapMode::WordChar,
                 },
 
