@@ -1,7 +1,7 @@
 use relm4::{
     gtk::{
         self,
-        gio::{self, Settings},
+        gio::{self, File, Settings},
         prelude::*,
         traits::{DialogExt, FileChooserExt, TextBufferExt, WidgetExt},
         FileChooserDialog, TextBuffer,
@@ -9,11 +9,7 @@ use relm4::{
     ComponentParts, ComponentSender, RelmApp, RelmWidgetExt, SimpleComponent,
 };
 
-use std::{
-    fs::File,
-    io::{prelude::*, BufReader, BufWriter},
-    process::exit,
-};
+use std::process::exit;
 
 struct AppModel {
     text: TextBuffer,
@@ -107,36 +103,27 @@ impl SimpleComponent for AppModel {
     fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
         match msg {
             AppMsg::Save => {
-                // Create a file chooser dialog
-                let dialog = FileChooserDialog::new(
-                    Some("Save file"),
-                    Some(&gtk::Window::new()),
-                    gtk::FileChooserAction::Save,
-                    &[
-                        ("Cancel", gtk::ResponseType::Cancel),
-                        ("Save", gtk::ResponseType::Accept),
-                    ],
-                );
-
                 // Grab the string from the text view
                 let start = self.text.start_iter();
                 let end = self.text.end_iter();
                 let text = self.text.text(&start, &end, true);
 
-                // Display the dialog
-                dialog.set_transient_for(Some(&gtk::Window::new()));
-                dialog.set_modal(true);
-                dialog.present();
+                // Retrieve the location setting
+                let location = self.settings.get::<String>("notes-location");
 
-                // Get the result from the dialog
-                dialog.connect_response(move |dialog, response| {
-                    if response == gtk::ResponseType::Accept {
-                        let file = &dialog.file().expect("File was not set");
-                        let mut file = BufWriter::new(File::create(file.path().unwrap()).unwrap());
-                        file.write_all(text.as_bytes()).unwrap();
-                    }
-                    dialog.close();
-                });
+                // Write the text to a file
+                let mut file = gio::File::for_path(location);
+                let output_stream = file.append_to(
+                    gio::FileCreateFlags::REPLACE_DESTINATION,
+                    gio::Cancellable::NONE,
+                );
+                output_stream
+                    .unwrap()
+                    .write_all(text.as_bytes(), gio::Cancellable::NONE)
+                    .expect("Failed to write to file");
+                output_stream
+                    .expect("Failed to write to file")
+                    .close(gio::Cancellable::NONE);
             }
             AppMsg::Open => {
                 // Create a file chooser dialog
@@ -156,6 +143,8 @@ impl SimpleComponent for AppModel {
                 dialog.present();
 
                 // Get the result from the dialog
+                // TODO: REIMPLEMENT IN GLIB
+                /*
                 dialog.connect_response(move |dialog, response| {
                     if response == gtk::ResponseType::Accept {
                         let file = &dialog.file().expect("File was not set");
@@ -165,7 +154,7 @@ impl SimpleComponent for AppModel {
                         println!("{}", filetext);
                     }
                     dialog.close();
-                });
+                }); */
             }
             AppMsg::Quit => exit(0),
             AppMsg::About => {

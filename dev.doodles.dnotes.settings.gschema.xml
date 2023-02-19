@@ -2,7 +2,7 @@
 <schemalist>
   <schema id="dev.doodles.dnotes" path="/dev/doodles/dnotes/settings/">
     <key name="notes-location" type="s">
-      <default>"$HOME/Documents/Notes/"</default>
+      <default>"$HOME/Documents/Notes/note"</default>
       <summary>Notes location</summary>
     </key>
   </schema>
