@@ -63,7 +63,7 @@ impl SimpleComponent for AppModel {
                     gio::Cancellable::NONE,
                 );
                 output_stream
-                    .unwrap()
+                    .expect("Failed to open file")
                     .write_all(text.as_bytes(), gio::Cancellable::NONE)
                     .expect("Failed to write to file");
             }
