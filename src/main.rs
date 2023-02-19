@@ -1,6 +1,7 @@
 use relm4::{
     gtk::{
         self,
+        gio::{self, Settings},
         prelude::*,
         traits::{DialogExt, FileChooserExt, TextBufferExt, WidgetExt},
         FileChooserDialog, TextBuffer,
@@ -16,6 +17,7 @@ use std::{
 
 struct AppModel {
     text: TextBuffer,
+    settings: Settings,
 }
 
 #[derive(Debug)]
@@ -28,7 +30,7 @@ enum AppMsg {
 
 #[relm4::component]
 impl SimpleComponent for AppModel {
-    type Init = TextBuffer;
+    type Init = (TextBuffer, Settings);
 
     type Input = AppMsg;
     type Output = ();
@@ -91,13 +93,12 @@ impl SimpleComponent for AppModel {
 
     // Initialize the UI.
     fn init(
-        text: Self::Init,
+        init: Self::Init,
         root: &Self::Root,
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
-        let model = AppModel { text };
-
-        // Insert the macro code generation here
+        let (text, settings) = init;
+        let model = AppModel { text, settings };
         let widgets = view_output!();
 
         ComponentParts { model, widgets }
@@ -185,5 +186,10 @@ impl SimpleComponent for AppModel {
 
 fn main() {
     let app = RelmApp::new("dev.doodles.dnotes");
-    app.run::<AppModel>(gtk::TextBuffer::new(Some(&gtk::TextTagTable::new())));
+    let settings = Settings::new("dev.doodles.dnotes");
+
+    app.run::<AppModel>((
+        gtk::TextBuffer::new(Some(&gtk::TextTagTable::new())),
+        settings,
+    ));
 }
