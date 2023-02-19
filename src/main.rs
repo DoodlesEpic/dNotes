@@ -22,6 +22,7 @@ enum AppMsg {
     Save,
     Quit,
     About,
+    Update(String),
 }
 
 #[relm4::component]
@@ -112,7 +113,7 @@ impl SimpleComponent for AppModel {
                 let location = self.settings.get::<String>("notes-location");
 
                 // Write the text to a file
-                let mut file = gio::File::for_path(location);
+                let file = File::for_path(location);
                 let output_stream = file.append_to(
                     gio::FileCreateFlags::REPLACE_DESTINATION,
                     gio::Cancellable::NONE,
@@ -121,9 +122,6 @@ impl SimpleComponent for AppModel {
                     .unwrap()
                     .write_all(text.as_bytes(), gio::Cancellable::NONE)
                     .expect("Failed to write to file");
-                output_stream
-                    .expect("Failed to write to file")
-                    .close(gio::Cancellable::NONE);
             }
             AppMsg::Open => {
                 // Create a file chooser dialog
@@ -143,18 +141,20 @@ impl SimpleComponent for AppModel {
                 dialog.present();
 
                 // Get the result from the dialog
-                // TODO: REIMPLEMENT IN GLIB
-                /*
                 dialog.connect_response(move |dialog, response| {
                     if response == gtk::ResponseType::Accept {
                         let file = &dialog.file().expect("File was not set");
-                        let mut file = BufReader::new(File::open(file.path().unwrap()).unwrap());
-                        let mut filetext = String::new();
-                        file.read_to_string(&mut filetext).unwrap();
-                        println!("{}", filetext);
+                        let file_path = file.path().expect("File path was not set");
+                        let file = gio::File::for_path(file_path);
+
+                        let (contents, _) = file
+                            .load_contents(gio::Cancellable::NONE)
+                            .expect("Failed to load file");
+                        let string = String::from_utf8(contents).expect("Failed to parse file");
+                        _sender.input(AppMsg::Update(string));
                     }
                     dialog.close();
-                }); */
+                });
             }
             AppMsg::Quit => exit(0),
             AppMsg::About => {
@@ -168,6 +168,9 @@ impl SimpleComponent for AppModel {
                 dialog.set_transient_for(Some(&gtk::Window::new()));
                 dialog.set_modal(true);
                 dialog.present();
+            }
+            AppMsg::Update(text) => {
+                self.text.set_text(&text);
             }
         }
     }
