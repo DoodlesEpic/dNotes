@@ -151,12 +151,10 @@ impl SimpleComponent for AppModel {
                     }
                 },
 
-                gtk::Box {
-                    set_orientation: gtk::Orientation::Vertical,
-                    set_hexpand: true,
-
+                gtk::ScrolledWindow {
                     gtk::TextView::with_buffer(&model.text) {
                         set_vexpand: true,
+                        set_hexpand: true,
                         set_bottom_margin: 10,
                         set_left_margin: 10,
                         set_right_margin: 10,
