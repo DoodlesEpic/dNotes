@@ -27,66 +27,10 @@ enum AppMsg {
 
 #[relm4::component]
 impl SimpleComponent for AppModel {
-    type Init = (TextBuffer, Settings);
-
     type Input = AppMsg;
+
     type Output = ();
-
-    view! {
-        gtk::Window {
-            set_title: Some("dNotes"),
-            set_default_width: 600,
-            set_default_height: 400,
-
-            gtk::Box {
-                set_orientation: gtk::Orientation::Horizontal,
-
-                gtk::Box {
-                    set_orientation: gtk::Orientation::Vertical,
-                    set_margin_all: 10,
-                    set_spacing: 10,
-
-                    gtk::Button::with_label("Save") {
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::Save);
-                        }
-                    },
-
-                    gtk::Button::with_label("Open") {
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::Open);
-                        }
-                    },
-
-                    gtk::Button::with_label("Quit") {
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::Quit);
-                        }
-                    },
-
-                    gtk::Button::with_label("About") {
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::About);
-                        }
-                    }
-                },
-
-                gtk::Box {
-                    set_orientation: gtk::Orientation::Vertical,
-                    set_hexpand: true,
-
-                    gtk::TextView::with_buffer(&model.text) {
-                        set_vexpand: true,
-                        set_bottom_margin: 10,
-                        set_left_margin: 10,
-                        set_right_margin: 10,
-                        set_top_margin: 10,
-                        set_wrap_mode: gtk::WrapMode::WordChar,
-                    },
-                }
-            }
-        }
-    }
+    type Init = (TextBuffer, Settings);
 
     // Initialize the UI.
     fn init(
@@ -171,6 +115,62 @@ impl SimpleComponent for AppModel {
             }
             AppMsg::Update(text) => {
                 self.text.set_text(&text);
+            }
+        }
+    }
+
+    view! {
+        gtk::Window {
+            set_title: Some("dNotes"),
+            set_default_width: 600,
+            set_default_height: 400,
+
+            gtk::Box {
+                set_orientation: gtk::Orientation::Horizontal,
+
+                gtk::Box {
+                    set_orientation: gtk::Orientation::Vertical,
+                    set_margin_all: 10,
+                    set_spacing: 10,
+
+                    gtk::Button::with_label("Save") {
+                        connect_clicked[sender] => move |_| {
+                            sender.input(AppMsg::Save);
+                        }
+                    },
+
+                    gtk::Button::with_label("Open") {
+                        connect_clicked[sender] => move |_| {
+                            sender.input(AppMsg::Open);
+                        }
+                    },
+
+                    gtk::Button::with_label("Quit") {
+                        connect_clicked[sender] => move |_| {
+                            sender.input(AppMsg::Quit);
+                        }
+                    },
+
+                    gtk::Button::with_label("About") {
+                        connect_clicked[sender] => move |_| {
+                            sender.input(AppMsg::About);
+                        }
+                    }
+                },
+
+                gtk::Box {
+                    set_orientation: gtk::Orientation::Vertical,
+                    set_hexpand: true,
+
+                    gtk::TextView::with_buffer(&model.text) {
+                        set_vexpand: true,
+                        set_bottom_margin: 10,
+                        set_left_margin: 10,
+                        set_right_margin: 10,
+                        set_top_margin: 10,
+                        set_wrap_mode: gtk::WrapMode::WordChar,
+                    },
+                }
             }
         }
     }
