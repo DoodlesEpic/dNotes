@@ -5,12 +5,13 @@ use relm4::{
         traits::{DialogExt, FileChooserExt, TextBufferExt, WidgetExt},
         FileChooserDialog, TextBuffer,
     },
-    ComponentParts, ComponentSender, RelmApp, SimpleComponent,
+    ComponentParts, ComponentSender, RelmApp, RelmWidgetExt, SimpleComponent,
 };
 
 use std::{
     fs::File,
-    io::{prelude::*, BufWriter},
+    io::{prelude::*, BufReader, BufWriter},
+    process::exit,
 };
 
 struct AppModel {
@@ -19,7 +20,10 @@ struct AppModel {
 
 #[derive(Debug)]
 enum AppMsg {
+    Open,
     Save,
+    Quit,
+    About,
 }
 
 #[relm4::component]
@@ -36,22 +40,51 @@ impl SimpleComponent for AppModel {
             set_default_height: 400,
 
             gtk::Box {
-                set_orientation: gtk::Orientation::Vertical,
+                set_orientation: gtk::Orientation::Horizontal,
 
-                gtk::TextView::with_buffer(&model.text) {
-                    set_vexpand: true,
-                    set_bottom_margin: 10,
-                    set_left_margin: 10,
-                    set_right_margin: 10,
-                    set_top_margin: 10,
-                    set_wrap_mode: gtk::WrapMode::WordChar,
-                },
+                gtk::Box {
+                    set_orientation: gtk::Orientation::Vertical,
+                    set_margin_all: 10,
+                    set_spacing: 10,
 
-                gtk::Button::with_label("Save") {
-                    connect_clicked[sender] => move |_| {
-                        sender.input(AppMsg::Save);
+                    gtk::Button::with_label("Save") {
+                        connect_clicked[sender] => move |_| {
+                            sender.input(AppMsg::Save);
+                        }
+                    },
+
+                    gtk::Button::with_label("Open") {
+                        connect_clicked[sender] => move |_| {
+                            sender.input(AppMsg::Open);
+                        }
+                    },
+
+                    gtk::Button::with_label("Quit") {
+                        connect_clicked[sender] => move |_| {
+                            sender.input(AppMsg::Quit);
+                        }
+                    },
+
+                    gtk::Button::with_label("About") {
+                        connect_clicked[sender] => move |_| {
+                            sender.input(AppMsg::About);
+                        }
                     }
                 },
+
+                gtk::Box {
+                    set_orientation: gtk::Orientation::Vertical,
+                    set_hexpand: true,
+
+                    gtk::TextView::with_buffer(&model.text) {
+                        set_vexpand: true,
+                        set_bottom_margin: 10,
+                        set_left_margin: 10,
+                        set_right_margin: 10,
+                        set_top_margin: 10,
+                        set_wrap_mode: gtk::WrapMode::WordChar,
+                    },
+                }
             }
         }
     }
@@ -103,6 +136,48 @@ impl SimpleComponent for AppModel {
                     }
                     dialog.close();
                 });
+            }
+            AppMsg::Open => {
+                // Create a file chooser dialog
+                let dialog = FileChooserDialog::new(
+                    Some("Open file"),
+                    Some(&gtk::Window::new()),
+                    gtk::FileChooserAction::Open,
+                    &[
+                        ("Cancel", gtk::ResponseType::Cancel),
+                        ("Open", gtk::ResponseType::Accept),
+                    ],
+                );
+
+                // Display the dialog
+                dialog.set_transient_for(Some(&gtk::Window::new()));
+                dialog.set_modal(true);
+                dialog.present();
+
+                // Get the result from the dialog
+                dialog.connect_response(move |dialog, response| {
+                    if response == gtk::ResponseType::Accept {
+                        let file = &dialog.file().expect("File was not set");
+                        let mut file = BufReader::new(File::open(file.path().unwrap()).unwrap());
+                        let mut filetext = String::new();
+                        file.read_to_string(&mut filetext).unwrap();
+                        println!("{}", filetext);
+                    }
+                    dialog.close();
+                });
+            }
+            AppMsg::Quit => exit(0),
+            AppMsg::About => {
+                let dialog = gtk::AboutDialog::new();
+                dialog.set_program_name(Some("dNotes"));
+                dialog.set_version(Some("0.2.1"));
+                dialog.set_comments(Some(" A simple, free and open source cross platform note taking application. Developed with GTK 4."));
+                dialog.set_website(Some("https://github.com/DoodlesEpic/dNotes"));
+                dialog.set_authors(&["Doodles"]);
+                dialog.set_license_type(gtk::License::Gpl30Only);
+                dialog.set_transient_for(Some(&gtk::Window::new()));
+                dialog.set_modal(true);
+                dialog.present();
             }
         }
     }
