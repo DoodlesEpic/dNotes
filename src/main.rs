@@ -1,19 +1,11 @@
-use relm4::{
-    gtk::{
-        self,
-        gio::{self, File, Settings},
-        prelude::*,
-        traits::{DialogExt, FileChooserExt, TextBufferExt, WidgetExt},
-        FileChooserDialog, TextBuffer,
-    },
-    ComponentParts, ComponentSender, RelmApp, RelmWidgetExt, SimpleComponent,
-};
-
 use std::process::exit;
 
+use relm4::gtk::gio::{self};
+use relm4::gtk::prelude::*;
+use relm4::prelude::*;
 struct AppModel {
-    text: TextBuffer,
-    settings: Settings,
+    text: gtk::TextBuffer,
+    settings: gio::Settings,
 }
 
 #[derive(Debug)]
@@ -30,7 +22,7 @@ impl SimpleComponent for AppModel {
     type Input = AppMsg;
 
     type Output = ();
-    type Init = (TextBuffer, Settings);
+    type Init = (gtk::TextBuffer, gio::Settings);
 
     // Initialize the UI.
     fn init(
@@ -56,21 +48,21 @@ impl SimpleComponent for AppModel {
                 // Retrieve the location setting
                 let location = self.settings.get::<String>("notes-location");
 
-                // Write the text to a file
-                let file = File::for_path(location);
+                // Write the text to a gio::File
+                let file = gio::File::for_path(location);
                 let output_stream = file.append_to(
                     gio::FileCreateFlags::REPLACE_DESTINATION,
                     gio::Cancellable::NONE,
                 );
                 output_stream
-                    .expect("Failed to open file")
+                    .expect("Failed to open gio::File")
                     .write_all(text.as_bytes(), gio::Cancellable::NONE)
-                    .expect("Failed to write to file");
+                    .expect("Failed to write to gio::File");
             }
             AppMsg::Open => {
-                // Create a file chooser dialog
-                let dialog = FileChooserDialog::new(
-                    Some("Open file"),
+                // Create a gio::File chooser dialog
+                let dialog = gtk::FileChooserDialog::new(
+                    Some("Open gio::File"),
                     Some(&gtk::Window::new()),
                     gtk::FileChooserAction::Open,
                     &[
@@ -87,14 +79,15 @@ impl SimpleComponent for AppModel {
                 // Get the result from the dialog
                 dialog.connect_response(move |dialog, response| {
                     if response == gtk::ResponseType::Accept {
-                        let file = &dialog.file().expect("File was not set");
-                        let file_path = file.path().expect("File path was not set");
+                        let file = &dialog.file().expect("gio::File was not set");
+                        let file_path = file.path().expect("gio::File path was not set");
                         let file = gio::File::for_path(file_path);
 
                         let (contents, _) = file
                             .load_contents(gio::Cancellable::NONE)
-                            .expect("Failed to load file");
-                        let string = String::from_utf8(contents).expect("Failed to parse file");
+                            .expect("Failed to load gio::File");
+                        let string =
+                            String::from_utf8(contents).expect("Failed to parse gio::File");
                         _sender.input(AppMsg::Update(string));
                     }
                     dialog.close();
@@ -178,7 +171,7 @@ impl SimpleComponent for AppModel {
 
 fn main() {
     let app = RelmApp::new("dev.doodles.dnotes");
-    let settings = Settings::new("dev.doodles.dnotes");
+    let settings = gio::Settings::new("dev.doodles.dnotes");
 
     app.run::<AppModel>((
         gtk::TextBuffer::new(Some(&gtk::TextTagTable::new())),
