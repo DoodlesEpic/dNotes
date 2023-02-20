@@ -1,11 +1,18 @@
+mod file_item;
+use file_item::FileItem;
+
 use std::process::exit;
 
+use relm4::factory::FactoryVecDeque;
 use relm4::gtk::gio::{self};
 use relm4::gtk::prelude::*;
 use relm4::prelude::*;
+
 struct AppModel {
     text: gtk::TextBuffer,
     settings: gio::Settings,
+    created_widgets: u8,
+    file_items: FactoryVecDeque<FileItem>,
 }
 
 #[derive(Debug)]
@@ -15,6 +22,7 @@ enum AppMsg {
     Quit,
     About,
     Update(String),
+    OpenFile(DynamicIndex),
 }
 
 #[relm4::component]
@@ -30,8 +38,15 @@ impl SimpleComponent for AppModel {
         root: &Self::Root,
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
+        let file_items = FactoryVecDeque::new(gtk::Box::default(), sender.input_sender());
         let (text, settings) = init;
-        let model = AppModel { text, settings };
+        let model = AppModel {
+            text,
+            settings,
+            created_widgets: 0,
+            file_items,
+        };
+        let files_box = model.file_items.widget();
         let widgets = view_output!();
 
         ComponentParts { model, widgets }
@@ -109,6 +124,11 @@ impl SimpleComponent for AppModel {
             AppMsg::Update(text) => {
                 self.text.set_text(&text);
             }
+            AppMsg::OpenFile(index) => {
+                let file = gio::File::for_path(&self.settings.get::<String>("notes-location"));
+                // TODO
+                println!("{:?}", file);
+            }
         }
     }
 
@@ -148,6 +168,12 @@ impl SimpleComponent for AppModel {
                         connect_clicked[sender] => move |_| {
                             sender.input(AppMsg::About);
                         }
+                    },
+
+                    #[local_ref]
+                    files_box -> gtk::Box {
+                        set_orientation: gtk::Orientation::Vertical,
+                        set_spacing: 5,
                     }
                 },
 
