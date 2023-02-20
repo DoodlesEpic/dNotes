@@ -61,7 +61,11 @@ impl SimpleComponent for AppModel {
                 let text = self.text.text(&start, &end, true);
 
                 // Retrieve the location setting
-                let location = self.settings.get::<String>("notes-location");
+                // Replace $HOME in the path with the user's home directory
+                let location = self.settings.get::<String>("notes-location").replace(
+                    "/$HOME",
+                    &std::env::var("HOME").expect("Failed to get $HOME"),
+                );
 
                 // Write the text to a gio::File
                 let file = gio::File::for_path(location);
