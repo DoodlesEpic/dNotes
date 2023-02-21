@@ -11,7 +11,6 @@ use relm4::prelude::*;
 struct AppModel {
     text: gtk::TextBuffer,
     settings: gio::Settings,
-    created_widgets: u8,
     file_items: FactoryVecDeque<FileItem>,
 }
 
@@ -43,7 +42,6 @@ impl SimpleComponent for AppModel {
         let model = AppModel {
             text,
             settings,
-            created_widgets: 0,
             file_items,
         };
         let files_box = model.file_items.widget();
@@ -53,6 +51,30 @@ impl SimpleComponent for AppModel {
     }
 
     fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
+        // Replace $HOME in the path with the user's home directory
+        let path = self.settings.get::<String>("notes-location").replace(
+            "/$HOME",
+            &std::env::var("HOME").expect("Failed to get $HOME"),
+        );
+        let files = gio::File::for_path(path);
+
+        // Remove the previously added files
+        self.file_items.guard().clear();
+
+        // Create a new file item for each file in the notes directory
+        files
+            .enumerate_children(
+                &gio::FILE_ATTRIBUTE_STANDARD_NAME,
+                gio::FileQueryInfoFlags::NONE,
+                gio::Cancellable::NONE,
+            )
+            .expect("Failed to enumerate directory")
+            .for_each(|file| {
+                self.file_items
+                    .guard()
+                    .push_back(file.expect("Failed to get gio::File").name());
+            });
+
         match msg {
             AppMsg::Save => {
                 // Grab the string from the text view

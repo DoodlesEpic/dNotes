@@ -4,7 +4,7 @@ use relm4::prelude::*;
 
 #[derive(Debug)]
 pub(crate) struct FileItem {
-    value: u8,
+    value: std::path::PathBuf,
 }
 
 #[derive(Debug)]
@@ -17,7 +17,7 @@ pub(crate) enum FileItemOutput {
 
 #[relm4::factory(pub(crate))]
 impl FactoryComponent for FileItem {
-    type Init = u8;
+    type Init = std::path::PathBuf;
     type Input = FileItemMsg;
     type Output = FileItemOutput;
     type CommandOutput = ();
@@ -33,7 +33,7 @@ impl FactoryComponent for FileItem {
             #[name(label)]
             gtk::Label {
                 #[watch]
-                set_label: &self.value.to_string(),
+                set_label: &self.value.file_name().unwrap_or_default().to_str().unwrap_or("Untitled"),
                 set_width_chars: 3,
             },
 
