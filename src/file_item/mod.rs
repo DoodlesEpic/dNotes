@@ -4,7 +4,7 @@ use relm4::prelude::*;
 
 #[derive(Debug)]
 pub(crate) struct FileItem {
-    value: std::path::PathBuf,
+    pub(crate) value: std::path::PathBuf,
 }
 
 #[derive(Debug)]
@@ -41,7 +41,7 @@ impl FactoryComponent for FileItem {
             gtk::Button {
                 set_label: "Open",
                 connect_clicked[sender, index] => move |_| {
-                    sender.output(FileItemOutput::Open(index.clone()))
+                    sender.output(FileItemOutput::Open(index.clone()));
                 }
             },
         }

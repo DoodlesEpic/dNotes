@@ -151,9 +151,30 @@ impl SimpleComponent for AppModel {
                 self.text.set_text(&text);
             }
             AppMsg::OpenFile(index) => {
-                let file = gio::File::for_path(&self.settings.get::<String>("notes-location"));
-                // TODO
-                println!("{:?}", file);
+                let path = self
+                    .file_items
+                    .guard()
+                    .get(index.current_index())
+                    .expect("Failed to get FileItem")
+                    .value
+                    .clone();
+
+                // Retrieve the location setting
+                // Replace $HOME in the path with the user's home directory
+                let location = self.settings.get::<String>("notes-location").replace(
+                    "/$HOME",
+                    &std::env::var("HOME").expect("Failed to get $HOME"),
+                );
+
+                let file = gio::File::for_path(
+                    location + &path.to_str().expect("Failed to convert filename to String"),
+                );
+
+                let (contents, _) = file
+                    .load_contents(gio::Cancellable::NONE)
+                    .expect("Failed to load gio::File contents");
+                let string = String::from_utf8(contents).expect("Failed to parse gio::File");
+                _sender.input(AppMsg::Update(string));
             }
         }
     }
