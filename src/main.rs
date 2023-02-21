@@ -10,6 +10,7 @@ use relm4::prelude::*;
 
 struct AppModel {
     text: gtk::TextBuffer,
+    filename: gtk::TextBuffer,
     settings: gio::Settings,
     file_items: FactoryVecDeque<FileItem>,
 }
@@ -20,7 +21,7 @@ enum AppMsg {
     Save,
     Quit,
     About,
-    Update(String),
+    Update(String, String),
     OpenFile(DynamicIndex),
 }
 
@@ -29,7 +30,7 @@ impl SimpleComponent for AppModel {
     type Input = AppMsg;
 
     type Output = ();
-    type Init = (gtk::TextBuffer, gio::Settings);
+    type Init = (gtk::TextBuffer, gtk::TextBuffer, gio::Settings);
 
     // Initialize the UI.
     fn init(
@@ -38,9 +39,10 @@ impl SimpleComponent for AppModel {
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
         let file_items = FactoryVecDeque::new(gtk::Box::default(), sender.input_sender());
-        let (text, settings) = init;
+        let (text, filename, settings) = init;
         let model = AppModel {
             text,
+            filename,
             settings,
             file_items,
         };
@@ -77,7 +79,12 @@ impl SimpleComponent for AppModel {
 
         match msg {
             AppMsg::Save => {
-                // Grab the string from the text view
+                // Grab the filename from the text view
+                let start_filename = self.filename.start_iter();
+                let end_filename = self.filename.end_iter();
+                let text_filename = self.filename.text(&start_filename, &end_filename, true);
+
+                // Grab the text from the text view
                 let start = self.text.start_iter();
                 let end = self.text.end_iter();
                 let text = self.text.text(&start, &end, true);
@@ -90,8 +97,10 @@ impl SimpleComponent for AppModel {
                 );
 
                 // Write the text to a gio::File
-                let file = gio::File::for_path(location);
-                let output_stream = file.append_to(
+                let file = gio::File::for_path(location + &text_filename + ".txt");
+                let output_stream = file.replace(
+                    None,
+                    false,
                     gio::FileCreateFlags::REPLACE_DESTINATION,
                     gio::Cancellable::NONE,
                 );
@@ -124,12 +133,21 @@ impl SimpleComponent for AppModel {
                         let file_path = file.path().expect("gio::File path was not set");
                         let file = gio::File::for_path(file_path);
 
+                        // Grab the filename and content of the file
+                        let filename = file
+                            .basename()
+                            .expect("Failed to get basename")
+                            .to_str()
+                            .expect("Failed to convert basename to str")
+                            .to_string();
                         let (contents, _) = file
                             .load_contents(gio::Cancellable::NONE)
                             .expect("Failed to load gio::File");
-                        let string =
+                        let contents =
                             String::from_utf8(contents).expect("Failed to parse gio::File");
-                        _sender.input(AppMsg::Update(string));
+
+                        // Update the text view with the contents and filename of the file
+                        _sender.input(AppMsg::Update(contents, filename));
                     }
                     dialog.close();
                 });
@@ -147,8 +165,9 @@ impl SimpleComponent for AppModel {
                 dialog.set_modal(true);
                 dialog.present();
             }
-            AppMsg::Update(text) => {
+            AppMsg::Update(text, filename) => {
                 self.text.set_text(&text);
+                self.filename.set_text(&filename);
             }
             AppMsg::OpenFile(index) => {
                 let path = self
@@ -170,11 +189,20 @@ impl SimpleComponent for AppModel {
                     location + &path.to_str().expect("Failed to convert filename to String"),
                 );
 
+                // Grab the filename and content of the file
+                let filename = file
+                    .basename()
+                    .expect("Failed to get basename")
+                    .to_str()
+                    .expect("Failed to convert basename to str")
+                    .to_string();
                 let (contents, _) = file
                     .load_contents(gio::Cancellable::NONE)
-                    .expect("Failed to load gio::File contents");
-                let string = String::from_utf8(contents).expect("Failed to parse gio::File");
-                _sender.input(AppMsg::Update(string));
+                    .expect("Failed to load gio::File");
+                let contents = String::from_utf8(contents).expect("Failed to parse gio::File");
+
+                // Update the text view with the contents and filename of the file
+                _sender.input(AppMsg::Update(contents, filename));
             }
         }
     }
@@ -225,15 +253,27 @@ impl SimpleComponent for AppModel {
                 },
 
                 gtk::ScrolledWindow {
-                    gtk::TextView::with_buffer(&model.text) {
-                        set_vexpand: true,
+                    gtk::Box {
+                        set_orientation: gtk::Orientation::Vertical,
                         set_hexpand: true,
-                        set_bottom_margin: 10,
-                        set_left_margin: 10,
-                        set_right_margin: 10,
-                        set_top_margin: 10,
-                        set_wrap_mode: gtk::WrapMode::WordChar,
-                    },
+                        set_spacing: 5,
+
+                        gtk::TextView::with_buffer(&model.filename) {
+                            set_bottom_margin: 10,
+                            set_left_margin: 10,
+                            set_right_margin: 10,
+                            set_top_margin: 10,
+                        },
+
+                        gtk::TextView::with_buffer(&model.text) {
+                            set_vexpand: true,
+                            set_bottom_margin: 10,
+                            set_left_margin: 10,
+                            set_right_margin: 10,
+                            set_top_margin: 10,
+                            set_wrap_mode: gtk::WrapMode::WordChar,
+                        },
+                    }
                 }
             }
         }
@@ -245,6 +285,7 @@ fn main() {
     let settings = gio::Settings::new("dev.doodles.dnotes");
 
     app.run::<AppModel>((
+        gtk::TextBuffer::new(Some(&gtk::TextTagTable::new())),
         gtk::TextBuffer::new(Some(&gtk::TextTagTable::new())),
         settings,
     ));
