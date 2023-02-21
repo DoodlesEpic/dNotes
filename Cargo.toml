@@ -1,5 +1,10 @@
 [package]
 name = "dnotes"
+description = " A simple, free and open source cross platform note taking application. Developed with GTK 4. "
+authors = ["Doodles <moraes.eduardo@proton.me>"]
+repository = "https://github.com/DoodlesEpic/dNotes"
+license = "GPL-3.0-only"
+categories = ["text-editors"]
 version = "0.2.1"
 edition = "2021"
 
