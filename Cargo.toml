@@ -5,7 +5,7 @@ authors = ["Doodles <moraes.eduardo@proton.me>"]
 repository = "https://github.com/DoodlesEpic/dNotes"
 license = "GPL-3.0-only"
 categories = ["text-editors"]
-version = "0.3.6"
+version = "0.3.7"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
