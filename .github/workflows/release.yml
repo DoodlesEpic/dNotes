@@ -75,11 +75,10 @@ jobs:
           os: windows-2019
           install-dist: >
             Set-ExecutionPolicy Bypass -Scope Process -Force;  
-            choco install git; 
-            choco install msys2; 
-            choco install visualstudio2022-workload-vctools; 
-            choco install python;
-            choco upgrade python -y
+            choco --no-progress install git; 
+            choco --no-progress install msys2; 
+            choco --no-progress install visualstudio2022-workload-vctools; 
+            choco --no-progress upgrade python -y
             py -m pip install --user pipx; 
             py -m pipx ensurepath; 
             pipx install gvsbuild --python $(which py); 
