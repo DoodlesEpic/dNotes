@@ -79,6 +79,7 @@ jobs:
             choco --no-progress install msys2; 
             choco --no-progress install visualstudio2022-workload-vctools; 
             choco --no-progress upgrade python -y
+            . $profile
             py -m pip install --user pipx; 
             py -m pipx ensurepath; 
             pipx install gvsbuild --python $(which py); 
