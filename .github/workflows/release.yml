@@ -82,7 +82,7 @@ jobs:
             choco upgrade python -y
             py -m pip install --user pipx; 
             py -m pipx ensurepath; 
-            py -m pipx install gvsbuild; 
+            pipx install gvsbuild --python $(which py); 
             gvsbuild build gtk4; 
             $env:Path = "C:\gtk-build\gtk\x64\release\bin;" + $env:Path; 
             $env:LIB = "C:\gtk-build\gtk\x64\release\lib;" + $env:LIB; 
