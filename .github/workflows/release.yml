@@ -85,9 +85,9 @@ jobs:
             cd C:\gtk-build\github;
             git clone https://github.com/wingtk/gvsbuild.git;
             cd C:\gtk-build\github\gvsbuild;
-            python -m venv .venv;
+            py -m venv .venv;
             .\.venv\Scripts\activate.ps1;
-            pip install .;
+            py -m pip install .;
             gvsbuild build gtk4; 
             $env:Path = "C:\gtk-build\gtk\x64\release\bin;" + $env:Path; 
             $env:LIB = "C:\gtk-build\gtk\x64\release\lib;" + $env:LIB; 
