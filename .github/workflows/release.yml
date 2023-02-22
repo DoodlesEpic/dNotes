@@ -78,9 +78,7 @@ jobs:
             choco -r install git; 
             choco -r install msys2; 
             choco -r install visualstudio2022-workload-vctools; 
-            py -m pip uninstall pipx;
             choco -r upgrade python -y;
-            . $profile;
             py -m pip install --user pipx; 
             py -m pipx ensurepath; 
             pipx install gvsbuild --python $(which py); 
