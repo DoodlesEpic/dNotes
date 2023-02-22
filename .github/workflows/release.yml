@@ -78,6 +78,7 @@ jobs:
             choco -r install git; 
             choco -r install msys2; 
             choco -r install visualstudio2022-workload-vctools;
+            choco -r install pkgconfiglite
             py --version;
             choco -r upgrade python -y;
             py --version;            
