@@ -65,7 +65,7 @@ jobs:
           install-dist: sudo apt install libgtk-4-dev build-essential && curl --proto '=https' --tlsv1.2 -L -sSf https://github.com/axodotdev/cargo-dist/releases/download/v0.0.2/installer.sh | sh
         - target: x86_64-apple-darwin
           os: macos-11
-          install-dist: brew install gtk4 && curl --proto '=https' --tlsv1.2 -L -sSf https://github.com/axodotdev/cargo-dist/releases/download/v0.0.2/installer.sh | sh
+          install-dist: brew install pkg-config && brew install gtk4 && curl --proto '=https' --tlsv1.2 -L -sSf https://github.com/axodotdev/cargo-dist/releases/download/v0.0.2/installer.sh | sh
         - target: x86_64-pc-windows-msvc
           os: windows-2019
           install-dist: rustup default stable-msvc && irm 'https://github.com/axodotdev/cargo-dist/releases/download/v0.0.2/installer.ps1' | iex
