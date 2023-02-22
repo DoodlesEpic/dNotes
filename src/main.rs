@@ -156,7 +156,7 @@ impl SimpleComponent for AppModel {
             AppMsg::About => {
                 let dialog = gtk::AboutDialog::new();
                 dialog.set_program_name(Some("dNotes"));
-                dialog.set_version(Some("0.2.1"));
+                dialog.set_version(Some(env!("CARGO_PKG_VERSION")));
                 dialog.set_comments(Some(" A simple, free and open source cross platform note taking application. Developed with GTK 4."));
                 dialog.set_website(Some("https://github.com/DoodlesEpic/dNotes"));
                 dialog.set_authors(&["Doodles"]);
