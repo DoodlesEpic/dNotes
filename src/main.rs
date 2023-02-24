@@ -250,7 +250,6 @@ impl SimpleComponent for AppModel {
                     gtk::Box {
                         set_orientation: gtk::Orientation::Vertical,
                         set_hexpand: true,
-                        set_spacing: 5,
 
                         gtk::TextView::with_buffer(&model.filename) {
                             set_bottom_margin: 10,
@@ -258,6 +257,8 @@ impl SimpleComponent for AppModel {
                             set_right_margin: 10,
                             set_top_margin: 10,
                         },
+
+                        gtk::Separator {},
 
                         gtk::TextView::with_buffer(&model.text) {
                             set_vexpand: true,
