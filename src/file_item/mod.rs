@@ -30,16 +30,9 @@ impl FactoryComponent for FileItem {
             set_orientation: gtk::Orientation::Horizontal,
             set_spacing: 10,
 
-            #[name(label)]
-            gtk::Label {
-                #[watch]
-                set_label: &self.value.file_name().unwrap_or_default().to_str().unwrap_or("Untitled"),
-                set_width_chars: 3,
-            },
-
             #[name(open_button)]
             gtk::Button {
-                set_label: "Open",
+                set_label: &self.value.file_name().unwrap_or_default().to_str().unwrap_or("Untitled"),
                 connect_clicked[sender, index] => move |_| {
                     sender.output(FileItemOutput::Open(index.clone()));
                 }
