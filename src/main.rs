@@ -234,17 +234,19 @@ impl SimpleComponent for AppModel {
                 },
             },
 
-            gtk::Box {
+            gtk::Paned {
                 set_orientation: gtk::Orientation::Horizontal,
 
                 #[local_ref]
-                files_box -> gtk::Box {
+                #[wrap(Some)]
+                set_start_child = files_box -> gtk::Box {
                     set_orientation: gtk::Orientation::Vertical,
                     set_spacing: 10,
                     set_margin_all: 10,
                 },
 
-                gtk::ScrolledWindow {
+                #[wrap(Some)]
+                set_end_child = &gtk::ScrolledWindow {
                     gtk::Box {
                         set_orientation: gtk::Orientation::Vertical,
                         set_hexpand: true,
