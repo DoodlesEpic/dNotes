@@ -7,8 +7,7 @@ license = "GPL-3.0-only"
 categories = ["text-editors"]
 version = "0.3.16"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+publish = false
 
 [dependencies]
 relm4 = "0.5.0"
