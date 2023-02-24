@@ -248,7 +248,7 @@ impl SimpleComponent for AppModel {
                     #[local_ref]
                     files_box -> gtk::Box {
                         set_orientation: gtk::Orientation::Vertical,
-                        set_spacing: 5,
+                        set_spacing: 10,
                     }
                 },
 
