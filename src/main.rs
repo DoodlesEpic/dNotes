@@ -1,8 +1,6 @@
 mod file_item;
 use file_item::FileItem;
 
-use std::process::exit;
-
 use relm4::factory::FactoryVecDeque;
 use relm4::gtk::gio::{self};
 use relm4::gtk::prelude::*;
@@ -19,7 +17,6 @@ struct AppModel {
 enum AppMsg {
     Open,
     Save,
-    Quit,
     About,
     Update(String, String),
     OpenFile(DynamicIndex),
@@ -152,7 +149,6 @@ impl SimpleComponent for AppModel {
                     dialog.close();
                 });
             }
-            AppMsg::Quit => exit(0),
             AppMsg::About => {
                 let dialog = gtk::AboutDialog::new();
                 dialog.set_program_name(Some("dNotes"));
@@ -213,43 +209,39 @@ impl SimpleComponent for AppModel {
             set_default_width: 600,
             set_default_height: 400,
 
-            gtk::Box {
-                set_orientation: gtk::Orientation::Horizontal,
-
-                gtk::Box {
-                    set_orientation: gtk::Orientation::Vertical,
-                    set_margin_all: 10,
-                    set_spacing: 10,
-
+            #[wrap(Some)]
+            set_titlebar = &gtk::HeaderBar {
+                pack_start = &gtk::Box {
                     gtk::Button::with_label("Save") {
+                        set_icon_name: "document-save",
                         connect_clicked[sender] => move |_| {
                             sender.input(AppMsg::Save);
                         }
                     },
 
                     gtk::Button::with_label("Open") {
+                        set_icon_name: "document-open",
                         connect_clicked[sender] => move |_| {
                             sender.input(AppMsg::Open);
                         }
                     },
-
-                    gtk::Button::with_label("Quit") {
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::Quit);
-                        }
-                    },
-
-                    gtk::Button::with_label("About") {
-                        connect_clicked[sender] => move |_| {
-                            sender.input(AppMsg::About);
-                        }
-                    },
-
-                    #[local_ref]
-                    files_box -> gtk::Box {
-                        set_orientation: gtk::Orientation::Vertical,
-                        set_spacing: 10,
+                },
+                pack_end = &gtk::Button::with_label("About") {
+                    set_icon_name: "help-about",
+                    connect_clicked[sender] => move |_| {
+                        sender.input(AppMsg::About);
                     }
+                },
+            },
+
+            gtk::Box {
+                set_orientation: gtk::Orientation::Horizontal,
+
+                #[local_ref]
+                files_box -> gtk::Box {
+                    set_orientation: gtk::Orientation::Vertical,
+                    set_spacing: 10,
+                    set_margin_all: 10,
                 },
 
                 gtk::ScrolledWindow {
