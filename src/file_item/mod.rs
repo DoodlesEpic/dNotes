@@ -26,17 +26,12 @@ impl FactoryComponent for FileItem {
     type ParentWidget = gtk::Box;
 
     view! {
-        root = gtk::Box {
-            set_orientation: gtk::Orientation::Horizontal,
-            set_spacing: 10,
-
-            #[name(open_button)]
-            gtk::Button {
-                set_label: &self.value.file_name().unwrap_or_default().to_str().unwrap_or("Untitled"),
-                connect_clicked[sender, index] => move |_| {
-                    sender.output(FileItemOutput::Open(index.clone()));
-                }
-            },
+        root = gtk::Button {
+            set_halign: gtk::Align::Fill,
+            set_label: &self.value.file_name().unwrap_or_default().to_str().unwrap_or("Untitled"),
+            connect_clicked[sender, index] => move |_| {
+                sender.output(FileItemOutput::Open(index.clone()));
+            }
         }
     }
 
