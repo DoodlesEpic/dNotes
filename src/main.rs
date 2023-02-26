@@ -134,8 +134,7 @@ impl SimpleComponent for AppModel {
                         let filename = file
                             .basename()
                             .expect("Failed to get basename")
-                            .to_str()
-                            .expect("Failed to convert basename to str")
+                            .to_string_lossy()
                             .to_string();
                         let (contents, _) = file
                             .load_contents(gio::Cancellable::NONE)
@@ -189,8 +188,7 @@ impl SimpleComponent for AppModel {
                 let filename = file
                     .basename()
                     .expect("Failed to get basename")
-                    .to_str()
-                    .expect("Failed to convert basename to str")
+                    .to_string_lossy()
                     .to_string()
                     .replace(".md", "");
                 let (contents, _) = file
