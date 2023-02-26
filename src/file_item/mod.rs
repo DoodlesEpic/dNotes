@@ -28,7 +28,7 @@ impl FactoryComponent for FileItem {
     view! {
         root = gtk::Button {
             set_halign: gtk::Align::Fill,
-            set_label: &self.value.file_name().unwrap_or_default().to_str().unwrap_or("Untitled"),
+            set_label: &self.value.file_name().expect("Failed to get file name").to_string_lossy().replace(".md", ""),
             connect_clicked[sender, index] => move |_| {
                 sender.output(FileItemOutput::Open(index.clone()));
             }
