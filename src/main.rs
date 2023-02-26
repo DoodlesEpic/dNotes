@@ -191,7 +191,8 @@ impl SimpleComponent for AppModel {
                     .expect("Failed to get basename")
                     .to_str()
                     .expect("Failed to convert basename to str")
-                    .to_string();
+                    .to_string()
+                    .replace(".txt", "");
                 let (contents, _) = file
                     .load_contents(gio::Cancellable::NONE)
                     .expect("Failed to load gio::File");
