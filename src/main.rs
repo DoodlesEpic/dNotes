@@ -94,7 +94,7 @@ impl SimpleComponent for AppModel {
                 );
 
                 // Write the text to a gio::File
-                let file = gio::File::for_path(location + &text_filename + ".txt");
+                let file = gio::File::for_path(location + &text_filename + ".md");
                 let output_stream = file.replace(
                     None,
                     false,
@@ -192,7 +192,7 @@ impl SimpleComponent for AppModel {
                     .to_str()
                     .expect("Failed to convert basename to str")
                     .to_string()
-                    .replace(".txt", "");
+                    .replace(".md", "");
                 let (contents, _) = file
                     .load_contents(gio::Cancellable::NONE)
                     .expect("Failed to load gio::File");
