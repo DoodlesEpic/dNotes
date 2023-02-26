@@ -2,7 +2,7 @@
 
 A simple, cross-platform, note taking application developed with [GTK 4](https://gtk.org/).
 
-![Screenshot from 2022-08-02 00-20-13](https://user-images.githubusercontent.com/37254797/182284817-ca1013f1-2a80-49a3-8344-8d1bdc4fe91d.png)
+![Screenshot from 2023-02-25 23-54-52](https://user-images.githubusercontent.com/37254797/221389722-6d242f72-fe68-4770-956c-b0e6108b8ce4.png)
 
 The project is made with [Rust](https://www.rust-lang.org/) using the [Relm4](https://relm4.org/) library: a high-level component-based framework inspired by [Elm](https://elm-lang.org/) for building GUI applications, built on top of [gtk-rs](https://gtk-rs.org/).
 
