@@ -18,6 +18,7 @@ enum AppMsg {
     Open,
     Save,
     About,
+    Load,
     Update(String, String),
     OpenFile(DynamicIndex),
 }
@@ -46,7 +47,10 @@ impl SimpleComponent for AppModel {
         let files_box = model.file_items.widget();
         let widgets = view_output!();
 
-        ComponentParts { model, widgets }
+        // Force update to load notes into the sidebar
+        sender.input(AppMsg::Load);
+
+        return ComponentParts { model, widgets };
     }
 
     fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
@@ -75,6 +79,10 @@ impl SimpleComponent for AppModel {
             });
 
         match msg {
+            AppMsg::Load => {
+                // Empty message that's used to trigger loading notes
+                // On startup of the application. Called from main.
+            }
             AppMsg::Save => {
                 // Grab the filename from the text view
                 let start_filename = self.filename.start_iter();
