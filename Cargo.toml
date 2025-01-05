@@ -5,7 +5,7 @@ authors = ["Doodles <moraes.eduardo@proton.me>"]
 repository = "https://github.com/DoodlesEpic/dNotes"
 license = "GPL-3.0-only"
 categories = ["text-editors"]
-version = "0.3.16"
+version = "0.3.17"
 edition = "2021"
 publish = false
 
