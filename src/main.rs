@@ -115,6 +115,60 @@ impl SimpleComponent for AppModel {
                     .expect("Failed to open gio::File")
                     .write_all(text.as_bytes(), gio::Cancellable::NONE)
                     .expect("Failed to write to gio::File");
+                _sender.input(AppMsg::Load);
+            }
+            AppMsg::Delete => {
+                let start_filename = self.filename.start_iter();
+                let end_filename = self.filename.end_iter();
+                let text_filename = self
+                    .filename
+                    .text(&start_filename, &end_filename, true)
+                    .trim()
+                    .to_string();
+
+                if text_filename.is_empty() {
+                    return;
+                }
+
+                let confirm_message =
+                    format!("Are you sure you want to delete \"{}\"?", text_filename);
+                let dialog = gtk::MessageDialog::new(
+                    Some(&gtk::Window::new()),
+                    gtk::DialogFlags::MODAL,
+                    gtk::MessageType::Question,
+                    gtk::ButtonsType::None,
+                    &confirm_message,
+                );
+
+                dialog.add_buttons(&[
+                    ("Cancel", gtk::ResponseType::Cancel),
+                    ("Delete", gtk::ResponseType::Accept),
+                ]);
+                dialog.present();
+
+                dialog.connect_response(move |dialog, response| {
+                    if response == gtk::ResponseType::Accept {
+                        _sender.input(AppMsg::ConfirmDelete(text_filename.clone()));
+                    }
+                    dialog.close();
+                });
+            }
+            AppMsg::ConfirmDelete(text_filename) => {
+                let location = self.settings.get::<String>("notes-location").replace(
+                    "/$HOME",
+                    &std::env::var("HOME").expect("Failed to get $HOME"),
+                );
+
+                let file_stem = text_filename.trim_end_matches(".md");
+                let file = gio::File::for_path(format!("{}{}.md", location, file_stem));
+
+                if file.query_exists(gio::Cancellable::NONE) {
+                    file.delete(gio::Cancellable::NONE)
+                        .expect("Failed to delete gio::File");
+                    self.text.set_text("");
+                    self.filename.set_text("");
+                    _sender.input(AppMsg::Load);
+                }
             }
             AppMsg::Delete => {
                 let start_filename = self.filename.start_iter();
