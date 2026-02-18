@@ -26,7 +26,7 @@ impl FactoryComponent for FileItem {
     type ParentWidget = gtk::Box;
 
     view! {
-        root = gtk::Button {
+        _root = gtk::Button {
             set_halign: gtk::Align::Fill,
             set_label: &self.value.file_name().expect("Failed to get file name").to_string_lossy().replace(".md", ""),
             connect_clicked[sender, index] => move |_| {

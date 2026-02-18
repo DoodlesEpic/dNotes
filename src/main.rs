@@ -46,7 +46,7 @@ impl SimpleComponent for AppModel {
             settings,
             file_items,
         };
-        let files_box = model.file_items.widget();
+        let _files_box = model.file_items.widget();
         let widgets = view_output!();
 
         // Force update to load notes into the sidebar
@@ -308,7 +308,7 @@ impl SimpleComponent for AppModel {
                 #[wrap(Some)]
                 set_start_child = &gtk::ScrolledWindow {
                     #[local_ref]
-                    files_box -> gtk::Box {
+                    _files_box -> gtk::Box {
                         set_orientation: gtk::Orientation::Vertical,
                         set_spacing: 10,
                         set_margin_all: 10,
