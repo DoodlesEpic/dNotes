@@ -8,6 +8,39 @@ The project is made with [Rust](https://www.rust-lang.org/) using the [Relm4](ht
 
 It was originally developed as a GNOME application written in C using GNOME Builder as the IDE and Cambalache to build the UI, but it has since been rewritten to use Rust and the Relm4 library.
 
+## Development
+
+### Prerequisites
+
+Before running the project, install:
+
+- [Rust and Cargo](https://www.rust-lang.org/tools/install)
+- [GTK 4 development libraries](https://docs.gtk.org/gtk4/) for your operating system
+
+### Run in development mode
+
+From the project root, use Cargo to build and run the app with debug settings:
+
+```bash
+cargo run
+```
+
+This command compiles the project in development mode and starts the GTK application.
+
+## Production build
+
+To compile an optimized binary for production, run:
+
+```bash
+cargo build --release
+```
+
+The production binary will be available at:
+
+```text
+target/release/dnotes
+```
+
 ## License
 
 This project is licensed under the GNU GPL v3, check what you can and cannot do with this code in the [LICENSE](/LICENSE) file.
