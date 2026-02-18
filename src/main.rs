@@ -17,6 +17,8 @@ struct AppModel {
 enum AppMsg {
     Open,
     Save,
+    Delete,
+    ConfirmDelete(String),
     About,
     Load,
     Update(String, String),
@@ -44,7 +46,7 @@ impl SimpleComponent for AppModel {
             settings,
             file_items,
         };
-        let files_box = model.file_items.widget();
+        let _files_box = model.file_items.widget();
         let widgets = view_output!();
 
         // Force update to load notes into the sidebar
@@ -113,6 +115,112 @@ impl SimpleComponent for AppModel {
                     .expect("Failed to open gio::File")
                     .write_all(text.as_bytes(), gio::Cancellable::NONE)
                     .expect("Failed to write to gio::File");
+                _sender.input(AppMsg::Load);
+            }
+            AppMsg::Delete => {
+                let start_filename = self.filename.start_iter();
+                let end_filename = self.filename.end_iter();
+                let text_filename = self
+                    .filename
+                    .text(&start_filename, &end_filename, true)
+                    .trim()
+                    .to_string();
+
+                if text_filename.is_empty() {
+                    return;
+                }
+
+                let confirm_message =
+                    format!("Are you sure you want to delete \"{}\"?", text_filename);
+                let dialog = gtk::MessageDialog::new(
+                    Some(&gtk::Window::new()),
+                    gtk::DialogFlags::MODAL,
+                    gtk::MessageType::Question,
+                    gtk::ButtonsType::None,
+                    &confirm_message,
+                );
+
+                dialog.add_buttons(&[
+                    ("Cancel", gtk::ResponseType::Cancel),
+                    ("Delete", gtk::ResponseType::Accept),
+                ]);
+                dialog.present();
+
+                dialog.connect_response(move |dialog, response| {
+                    if response == gtk::ResponseType::Accept {
+                        _sender.input(AppMsg::ConfirmDelete(text_filename.clone()));
+                    }
+                    dialog.close();
+                });
+            }
+            AppMsg::ConfirmDelete(text_filename) => {
+                let location = self.settings.get::<String>("notes-location").replace(
+                    "/$HOME",
+                    &std::env::var("HOME").expect("Failed to get $HOME"),
+                );
+
+                let file_stem = text_filename.trim_end_matches(".md");
+                let file = gio::File::for_path(format!("{}{}.md", location, file_stem));
+
+                if file.query_exists(gio::Cancellable::NONE) {
+                    file.delete(gio::Cancellable::NONE)
+                        .expect("Failed to delete gio::File");
+                    self.text.set_text("");
+                    self.filename.set_text("");
+                    _sender.input(AppMsg::Load);
+                }
+            }
+            AppMsg::Delete => {
+                let start_filename = self.filename.start_iter();
+                let end_filename = self.filename.end_iter();
+                let text_filename = self
+                    .filename
+                    .text(&start_filename, &end_filename, true)
+                    .trim()
+                    .to_string();
+
+                if text_filename.is_empty() {
+                    return;
+                }
+
+                let confirm_message =
+                    format!("Are you sure you want to delete \"{}\"?", text_filename);
+                let dialog = gtk::MessageDialog::new(
+                    Some(&gtk::Window::new()),
+                    gtk::DialogFlags::MODAL,
+                    gtk::MessageType::Question,
+                    gtk::ButtonsType::None,
+                    &confirm_message,
+                );
+
+                dialog.add_buttons(&[
+                    ("Cancel", gtk::ResponseType::Cancel),
+                    ("Delete", gtk::ResponseType::Accept),
+                ]);
+                dialog.present();
+
+                dialog.connect_response(move |dialog, response| {
+                    if response == gtk::ResponseType::Accept {
+                        _sender.input(AppMsg::ConfirmDelete(text_filename.clone()));
+                    }
+                    dialog.close();
+                });
+            }
+            AppMsg::ConfirmDelete(text_filename) => {
+                let location = self.settings.get::<String>("notes-location").replace(
+                    "/$HOME",
+                    &std::env::var("HOME").expect("Failed to get $HOME"),
+                );
+
+                let file_stem = text_filename.trim_end_matches(".md");
+                let file = gio::File::for_path(format!("{}{}.md", location, file_stem));
+
+                if file.query_exists(gio::Cancellable::NONE) {
+                    file.delete(gio::Cancellable::NONE)
+                        .expect("Failed to delete gio::File");
+                    self.text.set_text("");
+                    self.filename.set_text("");
+                }
             }
             AppMsg::Open => {
                 // Create a gio::File chooser dialog
@@ -232,6 +340,13 @@ impl SimpleComponent for AppModel {
                             sender.input(AppMsg::Open);
                         }
                     },
+
+                    gtk::Button::with_label("Delete") {
+                        set_icon_name: "edit-delete-symbolic",
+                        connect_clicked[sender] => move |_| {
+                            sender.input(AppMsg::Delete);
+                        }
+                    },
                 },
                 pack_end = &gtk::Button::with_label("About") {
                     set_icon_name: "help-about",
@@ -247,7 +362,7 @@ impl SimpleComponent for AppModel {
                 #[wrap(Some)]
                 set_start_child = &gtk::ScrolledWindow {
                     #[local_ref]
-                    files_box -> gtk::Box {
+                    _files_box -> gtk::Box {
                         set_orientation: gtk::Orientation::Vertical,
                         set_spacing: 10,
                         set_margin_all: 10,
